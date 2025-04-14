@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "D:\voice\voice_t\backend\run.py", line 3, in <module>
+    from app.core.config import settings
+  File "D:\voice\voice_t\backend\app\core\config.py", line 59, in <module>
+    settings = Settings()
+  File "D:\voice\voice_t\backend\app\core\config.py", line 52, in __init__
+    super().__init__(**data)
+  File "D:\app\anaconda\envs\cosyvoice\lib\site-packages\pydantic_settings\main.py", line 176, in __init__
+    super().__init__(
+  File "D:\app\anaconda\envs\cosyvoice\lib\site-packages\pydantic\main.py", line 175, in __init__
+    self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+cosyvoice_model_dir
+  Extra inputs are not permitted [type=extra_forbidden, input_value='pretrained_models/CosyVoice-300M-SFT', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.7/v/extra_forbidden

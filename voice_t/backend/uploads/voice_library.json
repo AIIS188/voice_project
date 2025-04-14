@@ -1,0 +1,79 @@
+[
+  {
+    "id": "中文女",
+    "name": "中文女声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 中文女声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/中文女"
+  },
+  {
+    "id": "中文男",
+    "name": "中文男声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 中文男声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/中文男"
+  },
+  {
+    "id": "日语男",
+    "name": "日语男声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 日语男声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/日语男"
+  },
+  {
+    "id": "粤语女",
+    "name": "粤语女声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 粤语女声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/粤语女"
+  },
+  {
+    "id": "英文女",
+    "name": "英文女声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 英文女声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/英文女"
+  },
+  {
+    "id": "英文男",
+    "name": "英文男声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 英文男声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/英文男"
+  },
+  {
+    "id": "韩语女",
+    "name": "韩语女声",
+    "type": "pretrained",
+    "description": "CosyVoice预训练音色: 韩语女声",
+    "tags": ["预训练", "cosyvoice"],
+    "created_at": "2023-12-01T08:00:00.000Z",
+    "status": "ready",
+    "quality_score": 0.95,
+    "preview_url": "/api/voice/preview/韩语女"
+  }
+]

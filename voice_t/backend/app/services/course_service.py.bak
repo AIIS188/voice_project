@@ -1,0 +1,1601 @@
+import os
+import json
+import asyncio
+import time
+import shutil
+import re
+import sys
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, Any, Optional, List, Union
+from fastapi import UploadFile, BackgroundTasks, WebSocket
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+COSYVOICE_PATH = os.path.join(ROOT_DIR, "cosyvoice")
+sys.path.append(ROOT_DIR)
+sys.path.append('{}/third_party/Matcha-TTS'.format(ROOT_DIR))
+
+from app.models.course import CoursewareDB, CoursewareTaskDB, CoursewareTextExtraction, CoursewareTaskStatus, SlideContent
+from app.services.cosyvoice_tts import (
+    synthesize_speech, get_tts_task_status, get_tts_task_result,
+    get_cosyvoice_model, synthesize_speech_streaming, COSYVOICE_AVAILABLE
+)
+from app.core.config import settings
+
+# Import PPT processing and lecture generation related modules
+from app.core.extractor_main import run_pipeline
+from app.core.outppt import PPTExtractor
+from app.core.ppt_lecture import LectureGenerator
+
+# Simulated database storage
+COURSEWARE_DB = []
+COURSEWARE_TASKS_DB = []
+COURSEWARE_FILE = os.path.join(settings.UPLOAD_DIR, "courseware.json")
+COURSEWARE_TASKS_FILE = os.path.join(settings.UPLOAD_DIR, "courseware_tasks.json")
+
+# Task event tracking - avoids polling
+TASK_EVENTS = {}
+
+# Initialize function
+async def init_course_service():
+    global COURSEWARE_DB, COURSEWARE_TASKS_DB
+
+    # Create necessary directories
+    os.makedirs(os.path.join(settings.UPLOAD_DIR, "courseware"), exist_ok=True)
+    os.makedirs(os.path.join(settings.UPLOAD_DIR, "voiced_courseware"), exist_ok=True)
+
+    # Load courseware database
+    if os.path.exists(COURSEWARE_FILE):
+        try:
+            with open(COURSEWARE_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                COURSEWARE_DB = [CoursewareDB(**item) for item in data]
+        except Exception as e:
+            print(f"Failed to initialize courseware service: {e}")
+
+    # Load courseware tasks database
+    if os.path.exists(COURSEWARE_TASKS_FILE):
+        try:
+            with open(COURSEWARE_TASKS_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                COURSEWARE_TASKS_DB = [CoursewareTaskDB(**item) for item in data]
+        except Exception as e:
+            print(f"Failed to initialize courseware tasks service: {e}")
+
+# Get all courseware
+async def get_all_courseware():
+    """
+    Get all courseware files
+    """
+    return COURSEWARE_DB
+
+# Get all tasks
+async def get_all_tasks():
+    """
+    Get all courseware tasks
+    """
+    return COURSEWARE_TASKS_DB
+
+# Save to file with improved error handling
+async def save_courseware_db():
+    try:
+        os.makedirs(os.path.dirname(COURSEWARE_FILE), exist_ok=True)
+        with open(COURSEWARE_FILE, 'w', encoding='utf-8') as f:
+            # 使用 dict() 方法，兼容所有版本的 Pydantic
+            data = [item.dict() for item in COURSEWARE_DB]
+            json.dump(data, f, default=str, ensure_ascii=False, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving courseware database: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+async def save_courseware_tasks_db():
+    try:
+        os.makedirs(os.path.dirname(COURSEWARE_TASKS_FILE), exist_ok=True)
+        with open(COURSEWARE_TASKS_FILE, 'w', encoding='utf-8') as f:
+            data = [item.dict() for item in COURSEWARE_TASKS_DB]
+            json.dump(data, f, default=str, ensure_ascii=False, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving courseware tasks database: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+# Upload courseware with improved error handling
+async def upload_courseware(file: UploadFile, name: str) -> str:
+    try:
+        print(f"Starting upload of file: {file.filename}, name: {name}")
+
+        # Generate unique file ID
+        file_id = f"course_{int(time.time())}_{hash(file.filename) % 10000:04d}"
+        print(f"Generated file ID: {file_id}")
+
+        # Create storage directories
+        courseware_dir = os.path.join(settings.UPLOAD_DIR, "courseware")
+        voiced_courseware_dir = os.path.join(settings.UPLOAD_DIR, "voiced_courseware")
+        os.makedirs(courseware_dir, exist_ok=True)
+        os.makedirs(voiced_courseware_dir, exist_ok=True)
+        print(f"Storage directory: {courseware_dir}")
+        print(f"Voiced courseware directory: {voiced_courseware_dir}")
+
+        # Save file path
+        file_path = os.path.join(courseware_dir, f"{file_id}_{file.filename}")
+        # Also create a path for the voiced courseware directory
+        voiced_file_path = os.path.join(voiced_courseware_dir, f"{file_id}_{file.filename}")
+        print(f"File will be saved to: {file_path}")
+        print(f"File will also be copied to: {voiced_file_path}")
+
+        # Get file size
+        file.file.seek(0, 2)  # Move to end of file
+        file_size = file.file.tell()  # Get position (file size)
+        file.file.seek(0)  # Back to start of file
+        print(f"File size: {file_size} bytes")
+
+        # Write file with proper exception handling
+        try:
+            print("Starting file write...")
+            # Use a more efficient method for large files
+            with open(file_path, "wb") as buffer:
+                # Read and write in chunks to avoid memory issues
+                chunk_size = 64 * 1024  # 64KB chunks
+                bytes_written = 0
+                while True:
+                    chunk = file.file.read(chunk_size)
+                    if not chunk:
+                        break
+                    buffer.write(chunk)
+                    bytes_written += len(chunk)
+                    if bytes_written % (1024 * 1024) == 0:  # Log every 1MB
+                        print(f"Written {bytes_written / (1024 * 1024):.2f} MB so far...")
+
+            print(f"File write completed, verifying...")
+            # Verify file was written correctly
+            if not os.path.exists(file_path):
+                raise ValueError(f"File not found after writing: {file_path}")
+
+            actual_size = os.path.getsize(file_path)
+            if actual_size != file_size:
+                raise ValueError(f"File verification failed. Expected size: {file_size}, actual: {actual_size}")
+
+            print(f"File verification successful")
+
+            # 复制文件到 voiced_courseware 目录
+            try:
+                print(f"Copying file to voiced courseware directory: {voiced_file_path}")
+                shutil.copy2(file_path, voiced_file_path)
+                print(f"File successfully copied to voiced courseware directory")
+            except Exception as copy_error:
+                print(f"Warning: Failed to copy file to voiced courseware directory: {copy_error}")
+                # 不中断上传过程，只记录警告
+        except Exception as e:
+            print(f"Error writing file: {e}")
+            if os.path.exists(file_path):
+                print(f"Cleaning up partial file: {file_path}")
+                os.remove(file_path)  # Clean up partial file
+            raise ValueError(f"Failed to save file: {str(e)}")
+
+        # Create record
+        print("Creating database record...")
+        courseware = CoursewareDB(
+            file_id=file_id,
+            name=name,
+            original_filename=file.filename,
+            file_path=file_path,
+            content_type=file.content_type,
+            file_size=file_size,
+            created_at=datetime.now()
+        )
+
+        # Add to "database"
+        COURSEWARE_DB.append(courseware)
+        print(f"Added to database, saving...")
+        await save_courseware_db()
+        print(f"Upload complete for file: {file.filename}, ID: {file_id}")
+
+        return file_id
+    except Exception as e:
+        print(f"Error uploading courseware: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
+
+def extract_from_ppt(file_path):
+    """
+    Extract content from PPT and get lecture notes. This function uses run_pipeline from main.py to process PPT files.
+
+    Args:
+        file_path: PPT file path
+
+    Returns:
+        slides_count: Number of slides
+        slides: List of SlideContent objects
+    """
+    # 开始从PPT文件提取内容
+
+    # Create temporary output directory
+    temp_dir = os.path.join(os.path.dirname(file_path), "temp_extraction")
+    os.makedirs(temp_dir, exist_ok=True)
+
+    try:
+        # Run PPT processing pipeline to get lecture notes path and slide count
+        lecture_path, slides_count = run_pipeline(
+            pptx_file=file_path,
+            output_dir=temp_dir,
+            temp_format="json",
+            lecture_mode="auto",
+            output_format="json",
+            save_intermediate=True
+        )
+
+        # Read generated lecture notes file
+        with open(lecture_path, 'r', encoding='utf-8') as f:
+            lecture_data = json.load(f)
+
+        # Create SlideContent object list
+        slides = []
+
+        # Process lecture data
+        lecture_title = lecture_data.get("# 讲案标题", "")
+        opening = lecture_data.get("## 开场白", "")
+
+        # Get all slide keys
+        slide_keys = [key for key in lecture_data.keys() if key.startswith("## 幻灯片")]
+        slide_keys.sort(key=lambda x: int(re.search(r'(\d+)', x).group(1)) if re.search(r'(\d+)', x) else 0)
+
+        for key in slide_keys:
+            try:
+                # Extract slide number
+                slide_id = int(re.search(r'(\d+)', key).group(1))
+                slide_data = lecture_data[key]
+
+                # Extract slide content
+                if isinstance(slide_data, dict):
+                    # Extract explanation content
+                    content = slide_data.get("讲解", "")
+
+                    # Extract key points and format as notes
+                    notes = ""
+                    key_points = slide_data.get("重点总结", [])
+                    if key_points:
+                        notes = "重点总结：\n" + "\n".join([f"- {point}" for point in key_points])
+
+                    # If there are interactive sections, add to notes
+                    interactions = slide_data.get("互动环节", [])
+                    if interactions:
+                        if notes:
+                            notes += "\n\n"
+                        notes += "互动环节：\n" + "\n".join([f"- {item}" for item in interactions])
+
+                    # If it's the last slide, add ending statement
+                    if "结束语" in slide_data:
+                        if notes:
+                            notes += "\n\n"
+                        notes += f"结束语：\n{slide_data['结束语']}"
+
+                    # Try to extract title (use first line of content or title field)
+                    title = ""
+                    if content:
+                        lines = content.split('\n')
+                        if lines:
+                            title = lines[0].strip()
+                            # If first line is short, it might be the title
+                            if len(title) < 50:
+                                content = '\n'.join(lines[1:]).strip()
+
+                    # Create SlideContent object
+                    slide_content = SlideContent(
+                        slide_id=slide_id,
+                        title=title,
+                        content=content,
+                        notes=notes
+                    )
+
+                    slides.append(slide_content)
+                else:
+                    # Handle case where slide data is a string
+                    print(f"Warning: Slide {key} data format is incorrect, skipping processing")
+
+            except Exception as e:
+                print(f"Error processing slide {key}: {e}")
+                import traceback
+                traceback.print_exc()
+
+        # Sort by slide number
+        slides.sort(key=lambda x: x.slide_id)
+
+        # If it's the first slide, add opening statement to content
+        if slides and opening:
+            first_slide = slides[0]
+            first_slide.content = f"{opening}\n\n{first_slide.content}"
+
+        # If there's no slide content (parsing may have failed), create a default slide
+        if not slides:
+            default_slide = SlideContent(
+                slide_id=1,
+                title=lecture_title if lecture_title else "Course Content",
+                content="Could not extract specific slide content, please check the original PPT file.",
+                notes=""
+            )
+            slides.append(default_slide)
+
+        # Clean up temporary directory (optional)
+        try:
+            shutil.rmtree(temp_dir)
+        except:
+            pass
+
+        return slides_count, slides
+
+    except Exception as e:
+        # 提取PPT内容时出错
+
+        # Create a default slide
+        default_slide = SlideContent(
+            slide_id=1,
+            title="Processing Error",
+            content=f"Error processing PPT file: {str(e)}",
+            notes=""
+        )
+
+        # Try to clean up temp directory on error
+        try:
+            shutil.rmtree(temp_dir)
+        except:
+            pass
+
+        return 1, [default_slide]
+
+# Extract courseware text with improved handling and fault tolerance
+async def extract_text(file_id: str) -> Optional[CoursewareTextExtraction]:
+    # Find courseware
+    courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+
+    if not courseware:
+        print(f"Courseware not found: {file_id}")
+        return None
+
+    # If text has already been extracted, return it directly
+    if courseware.slides_count > 0 and courseware.extracted_text:
+        print(f"Text already extracted for {file_id}, returning cached result")
+        return CoursewareTextExtraction(
+            file_id=courseware.file_id,
+            name=courseware.name,
+            slides_count=courseware.slides_count,
+            extracted_text=courseware.extracted_text,
+            total_text_length=sum(len(slide.content) for slide in courseware.extracted_text)
+        )
+
+    try:
+        print(f"Extracting text from PPT: {courseware.file_path}")
+        # Extract text from PPT
+        slides_count, extracted_text = extract_from_ppt(courseware.file_path)
+
+        if not extracted_text or slides_count == 0:
+            print(f"No text extracted from {file_id}")
+            return None
+
+        print(f"Successfully extracted text from {file_id}: {slides_count} slides")
+
+        # Update courseware record
+        for i, cw in enumerate(COURSEWARE_DB):
+            if cw.file_id == file_id:
+                COURSEWARE_DB[i].slides_count = slides_count
+                COURSEWARE_DB[i].extracted_text = extracted_text
+                COURSEWARE_DB[i].updated_at = datetime.now()
+                print(f"Updated courseware record for {file_id}")
+                break
+
+        # Save to database file
+        save_result = await save_courseware_db()
+        if not save_result:
+            print(f"Failed to save courseware database after text extraction for {file_id}")
+
+        # Create response object
+        result = CoursewareTextExtraction(
+            file_id=courseware.file_id,
+            name=courseware.name,
+            slides_count=slides_count,
+            extracted_text=extracted_text,
+            total_text_length=sum(len(slide.content) for slide in extracted_text)
+        )
+
+        print(f"Returning extracted text for {file_id}: {result.total_text_length} characters")
+        return result
+    except Exception as e:
+        print(f"Error extracting text from {file_id}: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+# Split text into chunks, optimized for TTS processing
+def split_text_into_chunks(text, max_length=500):
+    """Split long text into chunks suitable for TTS processing with smart sentence detection"""
+    if not text:
+        return []
+
+    # Split by Chinese and English sentence-ending punctuation
+    sentences = re.split(r'(?<=[。！？.!?])', text)
+    chunks = []
+    current_chunk = ""
+
+    for sentence in sentences:
+        if not sentence.strip():
+            continue
+
+        # Handle very long sentences by splitting them at commas if needed
+        if len(sentence) > max_length:
+            comma_parts = re.split(r'(?<=[,，])', sentence)
+            for part in comma_parts:
+                if not part.strip():
+                    continue
+
+                if len(current_chunk) + len(part) <= max_length:
+                    current_chunk += part
+                else:
+                    if current_chunk:
+                        chunks.append(current_chunk)
+                    # If a single part is still longer than max_length, split by characters
+                    if len(part) > max_length:
+                        for i in range(0, len(part), max_length):
+                            chunks.append(part[i:i+max_length])
+                    else:
+                        current_chunk = part
+        else:
+            # If current chunk + sentence doesn't exceed max length, add to current chunk
+            if len(current_chunk) + len(sentence) <= max_length:
+                current_chunk += sentence
+            else:
+                # If current chunk is not empty, add to results
+                if current_chunk:
+                    chunks.append(current_chunk)
+                # Start new chunk
+                current_chunk = sentence
+
+    # Add the last chunk
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks
+
+# Generate voiced courseware with improved handling
+async def generate_voiced_courseware(
+    background_tasks: BackgroundTasks,
+    file_id: str,
+    voice_id: str,
+    speed: float = 1.0,
+    emotion: str = "neutral",
+    pitch: float = 0.0,
+    energy: float = 1.0,
+    pause_factor: float = 1.0
+) -> str:
+    # Find courseware
+    courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+
+    if not courseware:
+        raise ValueError(f"Courseware not found: {file_id}")
+
+    # Extract text (if not yet extracted)
+    if courseware.slides_count == 0 or not courseware.extracted_text:
+        extraction_result = await extract_text(file_id)
+        if not extraction_result:
+            raise ValueError("Text extraction failed")
+
+        # Get updated courseware
+        courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+
+    # Create task
+    task_id = f"course_task_{int(time.time())}_{file_id[-6:]}"
+
+    # Build TTS parameters
+    tts_params = {
+        "mode": "sft",  # Use standard TTS mode
+        "speed": speed,
+        "emotion": emotion,
+        "pitch": pitch,
+        "energy": energy,
+        "pause_factor": pause_factor,
+        "seed": int(time.time()) % 10000  # Random seed
+    }
+
+    # Initialize event for this task
+    TASK_EVENTS[task_id] = asyncio.Event()
+
+    task = CoursewareTaskDB(
+        task_id=task_id,
+        file_id=file_id,
+        name=courseware.name,
+        voice_id=voice_id,
+        params=tts_params,
+        status="pending",
+        progress=0.0,
+        slides_processed=0,
+        total_slides=courseware.slides_count,
+        created_at=datetime.now()
+    )
+
+    # Add to "database"
+    COURSEWARE_TASKS_DB.append(task)
+    await save_courseware_tasks_db()
+
+    # Process task asynchronously
+    background_tasks.add_task(process_courseware_task, task_id)
+
+    return task_id
+
+# Process courseware task with improved TTS integration and error handling
+async def process_courseware_task(task_id: str):
+    # Find task
+    task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+
+    if not task:
+        # 未找到任务
+        return
+
+    # Check if CosyVoice is available
+    cosyvoice_model = get_cosyvoice_model()
+    if not COSYVOICE_AVAILABLE or not cosyvoice_model:
+        await update_task(task_id, status="failed", error="TTS engine not available")
+        return
+
+    try:
+        # Find courseware
+        courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == task.file_id), None)
+
+        if not courseware:
+            raise ValueError(f"Courseware not found: {task.file_id}")
+
+        # Update status
+        await update_task(task_id, status="processing", progress=0.1)
+
+        # Create output directory
+        output_dir = os.path.join(settings.UPLOAD_DIR, "voiced_courseware")
+        os.makedirs(output_dir, exist_ok=True)
+
+        # 检查 voiced_courseware 目录中是否已有该文件
+        original_file_path = os.path.join(settings.UPLOAD_DIR, "courseware", f"{courseware.file_id}_{courseware.original_filename}")
+        voiced_file_path = os.path.join(output_dir, f"{courseware.file_id}_{courseware.original_filename}")
+
+        # 检查原始文件是否存在
+        if not os.path.exists(voiced_file_path) and os.path.exists(original_file_path):
+            try:
+                # 如果 voiced_courseware 目录中没有，则复制原始文件
+                print(f"Copying original file to voiced_courseware directory: {voiced_file_path}")
+                shutil.copy2(original_file_path, voiced_file_path)
+                print(f"File successfully copied to voiced_courseware directory")
+            except Exception as copy_error:
+                print(f"Warning: Failed to copy file to voiced_courseware directory: {copy_error}")
+
+        # 使用原始文件名作为输出文件名
+        output_filename = courseware.original_filename
+
+        # 生成输出路径
+        output_path = voiced_file_path
+
+        # Update task output filename
+        await update_task(task_id, output_filename=output_filename)
+
+        # Create audio directory
+        # 清理任务ID，确保路径不包含特殊字符
+        import re
+        clean_task_id = re.sub(r'[^\w\-\.]', '_', task_id)
+        audio_dir = os.path.join(output_dir, f"{clean_task_id}_audio")
+        os.makedirs(audio_dir, exist_ok=True)
+
+        # Process each slide
+        tts_tasks = []
+        slides_total = len(courseware.extracted_text)
+
+        try:
+            from app.services.shared_storage import IN_MEMORY_AUDIO
+        except ImportError:
+            IN_MEMORY_AUDIO = {}
+
+        for i, slide in enumerate(courseware.extracted_text):
+            # Update progress
+            progress = 0.1 + (0.8 * ((i+1) / slides_total))
+            await update_task(
+                task_id,
+                progress=progress,
+                slides_processed=i+1
+            )
+
+            # Prepare slide text
+            slide_text = ""
+            if slide.title:
+                slide_text += f"{slide.title}。\n"
+            slide_text += slide.content
+
+            if slide.notes:
+                slide_text += f"\n\n讲解要点：{slide.notes}"
+
+            # Split long text into chunks
+            text_chunks = split_text_into_chunks(slide_text)
+
+            # Process each text chunk
+            chunk_tasks = []
+            for chunk_idx, chunk in enumerate(text_chunks):
+                # Use CosyVoice TTS directly with in-memory storage option
+                try:
+                    # Create a unique TTS ID for this chunk
+
+                    # Update TTS parameters to include in-memory storage flag
+                    tts_params = {**task.params, "save_to_memory": True}
+
+                    # Create temporary background tasks
+                    temp_bg_tasks = BackgroundTasks()
+
+                    # Submit TTS task
+                    tts_task_id = await synthesize_speech(
+                        temp_bg_tasks,
+                        chunk,
+                        task.voice_id,
+                        tts_params
+                    )
+
+                    # Execute the TTS task
+                    await temp_bg_tasks()
+
+                    # Wait for task to complete using event-based waiting instead of polling
+                    # Create a timeout to prevent infinite waiting
+                    MAX_WAIT_TIME = 30  # seconds
+
+                    # Start time
+                    start_time = time.time()
+
+                    # Wait for completion with timeout
+                    tts_completed = False
+                    while time.time() - start_time < MAX_WAIT_TIME:
+                        tts_status = await get_tts_task_status(tts_task_id)
+                        if tts_status and tts_status.status in ["completed", "failed"]:
+                            tts_completed = True
+                            break
+                        await asyncio.sleep(0.5)
+
+                    if not tts_completed:
+                        print(f"TTS task timed out: {tts_task_id}")
+                        continue
+
+                    # Process the result
+                    if tts_status and tts_status.status == "completed":
+                        # Get result - either from memory or file
+                        tts_result = await get_tts_task_result(tts_task_id)
+
+                        # Create output audio path
+                        # 清理幻灯片ID和块索引，确保文件名不包含特殊字符
+                        import re
+                        clean_slide_id = re.sub(r'[^\w\-\.]', '_', str(slide.slide_id))
+                        clean_chunk_idx = re.sub(r'[^\w\-\.]', '_', str(chunk_idx))
+                        chunk_audio_file = os.path.join(audio_dir, f"slide_{clean_slide_id}_chunk_{clean_chunk_idx}.wav")
+
+                        # Check if audio is in memory
+                        if tts_task_id in IN_MEMORY_AUDIO:
+                            # Write from memory to file
+                            with open(chunk_audio_file, "wb") as f:
+                                f.write(IN_MEMORY_AUDIO[tts_task_id])
+
+                            chunk_tasks.append({
+                                "chunk_id": chunk_idx,
+                                "audio_file": chunk_audio_file,
+                                "duration": tts_status.duration or 0
+                            })
+                        # If not in memory, check file path
+                        elif tts_result and tts_result.file_path and os.path.exists(tts_result.file_path):
+                            # Copy from TTS output file
+                            shutil.copy2(tts_result.file_path, chunk_audio_file)
+
+                            chunk_tasks.append({
+                                "chunk_id": chunk_idx,
+                                "audio_file": chunk_audio_file,
+                                "duration": tts_result.duration or 0
+                            })
+                        else:
+                            print(f"TTS output not found for: {tts_task_id}")
+                    else:
+                        print(f"TTS task failed ({tts_status.status if tts_status else 'unknown'}): {tts_task_id}")
+                        print(f"Error: {tts_status.error if tts_status else 'unknown'}")
+
+                except Exception as e:
+                    print(f"Failed to process text chunk: {e}")
+                    import traceback
+                    traceback.print_exc()
+
+            # Save slide task information
+            tts_tasks.append({
+                "slide_id": slide.slide_id,
+                "title": slide.title,
+                "chunks": chunk_tasks,
+                "total_duration": sum(chunk.get("duration", 0) for chunk in chunk_tasks)
+            })
+
+        # Update progress
+        await update_task(task_id, progress=0.9, slides_processed=slides_total)
+
+        # 创建有声课件，将音频嵌入到 PPT 中
+        try:
+            # 检查原始文件是否存在
+            original_file_path = os.path.join(settings.UPLOAD_DIR, "courseware", f"{courseware.file_id}_{courseware.original_filename}")
+            voiced_file_path = os.path.join(settings.UPLOAD_DIR, "voiced_courseware", f"{courseware.file_id}_{courseware.original_filename}")
+
+            # 首先检查 voiced_courseware 目录
+            if os.path.exists(voiced_file_path):
+                print(f"Using existing voiced file: {voiced_file_path}")
+                output_path = voiced_file_path
+            # 然后检查原始文件
+            elif os.path.exists(original_file_path):
+                print(f"Using original file: {original_file_path}")
+                # 创建 voiced_courseware 目录
+                os.makedirs(os.path.dirname(voiced_file_path), exist_ok=True)
+                # 复制原始文件到 voiced_courseware 目录
+                shutil.copy2(original_file_path, voiced_file_path)
+                output_path = voiced_file_path
+            else:
+                print(f"Original file not found: {original_file_path}")
+                raise FileNotFoundError(f"Cannot find original file: {original_file_path}")
+
+            # 检查文件类型
+            file_ext = Path(courseware.original_filename).suffix.lower()
+
+            # 处理不同类型的文件
+            if file_ext in [".pptx"]:
+                try:
+                    # 尝试使用 COM 接口插入音频（仅在 Windows 上有效）
+                    try:
+                        import win32com.client
+
+                        # 使用 PowerPoint COM 接口打开演示文稿
+                        ppt_app = win32com.client.Dispatch("PowerPoint.Application")
+                        ppt_app.Visible = False  # 不显示 PowerPoint 窗口
+
+                        # 打开演示文稿
+                        abs_output_path = os.path.abspath(output_path)
+                        presentation = ppt_app.Presentations.Open(abs_output_path)
+
+                        # 获取幻灯片总数
+                        total_slides = len(presentation.Slides)
+                        print(f"Total slides: {total_slides}")
+
+                        # 处理音频任务数量与幻灯片数量不匹配的情况
+                        if len(tts_tasks) > total_slides:
+                            print(f"Warning: Audio tasks count ({len(tts_tasks)}) > slides count ({total_slides})")
+                            print("Will merge extra audio tasks to the last slide")
+
+                            # 将多余的音频任务合并到最后一张幻灯片
+                            last_slide_index = total_slides - 1
+                            extra_tasks = tts_tasks[total_slides:]
+
+                            # 确保最后一张幻灯片有对应的音频任务
+                            if last_slide_index < len(tts_tasks):
+                                last_task = tts_tasks[last_slide_index]
+
+                                # 合并额外的音频任务到最后一张幻灯片
+                                for extra_task in extra_tasks:
+                                    for chunk in extra_task["chunks"]:
+                                        last_task["chunks"].append(chunk)
+
+                                # 更新总时长
+                                last_task["total_duration"] = sum(chunk.get("duration", 0) for chunk in last_task["chunks"])
+
+                            # 只保留有效的音频任务
+                            tts_tasks = tts_tasks[:total_slides]
+
+                        # 遇到的音频文件列表
+                        all_audio_files = []
+
+                        # 遇到的幻灯片索引
+                        processed_slide_indices = set()
+
+                        # 遇到每个幻灯片，添加音频
+                        for i, slide_task in enumerate(tts_tasks):
+                            slide_id = slide_task["slide_id"]
+
+                            # 计算实际的幻灯片索引
+                            # 如果 slide_id 超出范围，使用可用的最后一张幻灯片
+                            actual_slide_index = min(slide_id, total_slides - 1)
+
+                            # 记录已处理的幻灯片索引
+                            processed_slide_indices.add(actual_slide_index)
+
+                            # 获取对应的幻灯片
+                            slide = presentation.Slides[actual_slide_index + 1]  # PowerPoint 中幻灯片索引从 1 开始
+
+                            # 遇到该幻灯片的所有音频块
+                            for chunk in slide_task["chunks"]:
+                                audio_file = chunk["audio_file"]
+
+                                # 检查音频文件是否存在
+                                if os.path.exists(audio_file):
+                                    # 记录音频文件
+                                    all_audio_files.append(audio_file)
+
+                                    # 使用绝对路径
+                                    abs_audio_file = os.path.abspath(audio_file)
+
+                                    # 添加音频到幻灯片
+                                    shape = slide.Shapes.AddMediaObject2(abs_audio_file)
+                                    shape.AnimationSettings.PlaySettings.PlayOnEntry = True
+                                    shape.AnimationSettings.PlaySettings.HideWhileNotPlaying = True
+
+                                    # 调整大小和位置（小尺寸，不影响视觉）
+                                    shape.Width = 1
+                                    shape.Height = 1
+                                    shape.Left = 0
+                                    shape.Top = 0
+
+                        # 保存演示文稿
+                        presentation.Save()
+                        presentation.Close()
+                        ppt_app.Quit()
+
+                        print(f"Successfully inserted audio using COM interface: {output_path}")
+                    except ImportError:
+                        # 如果无法使用 COM 接口，回退到原始方法
+                        print("Cannot use COM interface, trying python-pptx for audio insertion")
+                        print("To use COM interface, install pywin32 library: pip install pywin32")
+                        raise
+                    except Exception as e:
+                        print(f"Error using COM interface: {e}")
+                        raise
+
+                except Exception as e:
+                    print(f"Failed to insert audio to PPT: {e}")
+                    # 创建一个包含所有音频文件的 ZIP 包
+                    try:
+                        import zipfile
+
+                        # 创建 ZIP 文件路径
+                        zip_path = os.path.join(output_dir, f"{task_id}_audio_files.zip")
+
+                        # 收集所有音频文件
+                        all_audio_files = []
+                        for slide_task in tts_tasks:
+                            for chunk in slide_task["chunks"]:
+                                audio_file = chunk["audio_file"]
+                                if os.path.exists(audio_file):
+                                    all_audio_files.append(audio_file)
+
+                        # 创建 ZIP 文件
+                        with zipfile.ZipFile(zip_path, 'w') as zipf:
+                            # 遇到所有音频文件
+                            for audio_file in all_audio_files:
+                                # 检查音频文件是否存在
+                                if os.path.exists(audio_file):
+                                    # 将音频文件添加到 ZIP 包中
+                                    zipf.write(audio_file, os.path.basename(audio_file))
+
+                        print(f"Created audio ZIP file: {zip_path}")
+
+                        # 更新输出路径
+                        output_path = zip_path
+                    except Exception as zip_error:
+                        print(f"Failed to create audio ZIP file: {zip_error}")
+
+                    # 创建错误信息
+                    error_message = f"Failed to insert audio to PPT: {e}. Audio files have been generated and can be downloaded separately."
+                    await update_task(task_id, error=error_message)
+            elif file_ext in [".pdf"]:
+                # PDF 文件不支持直接嵌入音频，已生成音频文件供下载
+                print(f"PDF files do not support audio embedding. Audio files have been generated separately.")
+                # 创建一个包含所有音频文件的 ZIP 包
+                try:
+                    import zipfile
+
+                    # 创建 ZIP 文件路径
+                    zip_path = os.path.join(output_dir, f"{task_id}_audio_files.zip")
+
+                    # 收集所有音频文件
+                    all_audio_files = []
+                    for slide_task in tts_tasks:
+                        for chunk in slide_task["chunks"]:
+                            audio_file = chunk["audio_file"]
+                            if os.path.exists(audio_file):
+                                all_audio_files.append(audio_file)
+
+                    # 创建 ZIP 文件
+                    with zipfile.ZipFile(zip_path, 'w') as zipf:
+                        # 遇到所有音频文件
+                        for audio_file in all_audio_files:
+                            # 检查音频文件是否存在
+                            if os.path.exists(audio_file):
+                                # 将音频文件添加到 ZIP 包中
+                                zipf.write(audio_file, os.path.basename(audio_file))
+
+                    print(f"Created audio ZIP file for PDF: {zip_path}")
+
+                    # 更新输出路径
+                    output_path = zip_path
+                except Exception as zip_error:
+                    print(f"Failed to create audio ZIP file for PDF: {zip_error}")
+            else:
+                # 不支持的文件类型
+                print(f"Unsupported file type: {file_ext}")
+                # 创建错误信息
+                error_message = f"Unsupported file type: {file_ext}. Audio files have been generated and can be downloaded separately."
+                await update_task(task_id, error=error_message)
+
+                                # 计算实际的幻灯片索引
+                                # 如果 slide_id 超出范围，使用可用的最后一张幻灯片
+                                actual_slide_index = min(slide_id, total_slides - 1)
+
+                                # 初始化该幻灯片的音频文件列表
+                                if actual_slide_index not in audio_files_by_slide:
+                                    audio_files_by_slide[actual_slide_index] = []
+
+                                # 收集该幻灯片的所有音频文件
+                                for chunk in slide_task["chunks"]:
+                                    audio_file = chunk["audio_file"]
+
+                                    # 检查音频文件是否存在
+                                    if os.path.exists(audio_file):
+                                        # 将音频文件添加到列表中
+                                        audio_files_by_slide[actual_slide_index].append(audio_file)
+
+                            # 使用 PowerPoint COM 接口打开演示文稿
+                            ppt_app = win32com.client.Dispatch("PowerPoint.Application")
+                            ppt_app.Visible = False  # 不显示 PowerPoint 窗口
+
+                            # 打开演示文稿
+                            abs_output_path = os.path.abspath(output_path)
+                            presentation = ppt_app.Presentations.Open(abs_output_path)
+
+                            # 遍历每个幻灯片，添加音频
+                            for slide_index, audio_files in audio_files_by_slide.items():
+                                # 确保幻灯片索引在有效范围内
+                                if slide_index < len(presentation.Slides):
+                                    slide = presentation.Slides[slide_index + 1]  # PowerPoint 中幻灯片索引从 1 开始
+
+                                    # 遍历该幻灯片的所有音频文件
+                                    for audio_file in audio_files:
+                                        # 使用绝对路径
+                                        abs_audio_file = os.path.abspath(audio_file)
+
+                                        # 添加音频到幻灯片
+                                        shape = slide.Shapes.AddMediaObject2(abs_audio_file)
+                                        shape.AnimationSettings.PlaySettings.PlayOnEntry = True
+                                        shape.AnimationSettings.PlaySettings.HideWhileNotPlaying = True
+
+                                        # 调整大小和位置（小尺寸，不影响视觉）
+                                        shape.Width = 1
+                                        shape.Height = 1
+                                        shape.Left = 0
+                                        shape.Top = 0
+
+                            # 保存演示文稿
+                            presentation.Save()
+                            presentation.Close()
+                            ppt_app.Quit()
+
+                            # 清理临时目录
+                            shutil.rmtree(temp_dir, ignore_errors=True)
+
+                            print(f"成功使用 COM 接口将音频嵌入到课件中: {output_path}")
+
+                        except ImportError:
+                            # 如果无法使用 COM 接口，回退到原始方法
+                            print("无法使用 COM 接口，尝试使用 python-pptx 插入音频")
+                            print("要使用 COM 接口，请安装 pywin32 库: pip install pywin32")
+
+                            # 遍历每个幻灯片
+                            for i, slide_task in enumerate(tts_tasks):
+                                slide_id = slide_task["slide_id"]
+
+                                # 计算实际的幻灯片索引
+                                # 如果 slide_id 超出范围，使用可用的最后一张幻灯片
+                                actual_slide_index = min(slide_id, total_slides - 1)
+
+                                # 获取对应的幻灯片
+                                slide = prs.slides[actual_slide_index]
+
+                                # 遍历该幻灯片的所有音频块
+                                for chunk in slide_task["chunks"]:
+                                    audio_file = chunk["audio_file"]
+
+                                    # 检查音频文件是否存在
+                                    if os.path.exists(audio_file):
+                                        try:
+                                            # 使用绝对路径
+                                            abs_audio_file = os.path.abspath(audio_file)
+
+                                            # 添加音频到幻灯片
+                                            slide.shapes.add_movie(
+                                                abs_audio_file,
+                                                left=Inches(0),
+                                                top=Inches(0),
+                                                width=Inches(0.1),
+                                                height=Inches(0.1),
+                                                poster_frame=None,
+                                                play_on_click=True,
+                                                play_on_entry=True
+                                            )
+                                        except Exception as e:
+                                            print(f"使用 python-pptx 添加音频失败: {e}")
+
+                            # 保存修改后的演示文稿
+                            prs.save(output_path)
+
+                        except Exception as e:
+                            print(f"插入音频到 PPT 时出错: {e}")
+                            # 创建一个包含所有音频文件的 ZIP 包
+                            try:
+                                import zipfile
+
+                                # 创建 ZIP 文件路径
+                                zip_path = os.path.join(output_dir, f"{task_id}_audio_files.zip")
+
+                                # 创建 ZIP 文件
+                                with zipfile.ZipFile(zip_path, 'w') as zipf:
+                                    # 遍历所有音频任务
+                                    for slide_task in tts_tasks:
+                                        # 遍历该幻灯片的所有音频块
+                                        for chunk in slide_task["chunks"]:
+                                            audio_file = chunk["audio_file"]
+
+                                            # 检查音频文件是否存在
+                                            if os.path.exists(audio_file):
+                                                # 将音频文件添加到 ZIP 包中
+                                                zipf.write(audio_file, os.path.basename(audio_file))
+
+                                print(f"已创建包含所有音频文件的 ZIP 包: {zip_path}")
+
+                                # 更新任务状态，添加音频 ZIP 包路径
+                                error_message = f"无法将音频嵌入到 PPT 中，已创建包含所有音频文件的 ZIP 包。错误: {e}"
+                                await update_task(task_id, error=error_message, file_path=zip_path)
+                            except Exception as zip_error:
+                                print(f"创建音频 ZIP 包失败: {zip_error}")
+
+                        print(f"尝试将音频嵌入到课件中: {output_path}")
+                    except ImportError as e:
+                        print(f"缺少 python-pptx 库: {e}")
+                        print("请安装 python-pptx 库: pip install python-pptx")
+                    except Exception as e:
+                        print(f"处理 PPTX 文件时出错: {e}")
+                        import traceback
+                        traceback.print_exc()
+
+                        # 记录更详细的错误信息
+                        error_details = {
+                            "error_type": str(type(e).__name__),
+                            "error_message": str(e),
+                            "traceback": traceback.format_exc(),
+                            "slide_id": slide_id if 'slide_id' in locals() else None,
+                            "audio_file": audio_file if 'audio_file' in locals() else None,
+                            "ppt_file": output_path
+                        }
+
+                        # 更新任务状态，包含详细错误信息
+                        error_message = f"音频插入失败: {e}. 音频文件已生成，可以下载清单文件查看音频路径。"
+                        await update_task(task_id, error=error_message, error_details=error_details)
+                elif file_ext in [".pdf"]:
+                    # PDF 文件不支持直接嵌入音频，已生成音频文件供下载
+                    pass
+                else:
+                    # 不支持的文件类型
+                    pass
+            else:
+                # 原始课件文件未找到
+                pass
+        except Exception as e:
+            # 创建有声课件失败
+            pass
+
+        # Create manifest file containing slides and audio paths
+        manifest_path = os.path.join(output_dir, f"{task_id}_manifest.json")
+        manifest = None  # 初始化为 None
+        total_duration = 0  # 默认总时长
+
+        try:
+            # 计算总时长
+            total_duration = sum(slide.get("total_duration", 0) for slide in tts_tasks)
+
+            # 创建清单对象
+            manifest = {
+                "task_id": task_id,
+                "courseware": {
+                    "file_id": courseware.file_id,
+                    "name": courseware.name,
+                    "original_filename": courseware.original_filename
+                },
+                "output_file": output_path,
+                "total_duration": total_duration,
+                "slides": tts_tasks,
+                "tts_params": task.params
+            }
+
+            # 写入清单文件
+            with open(manifest_path, "w", encoding='utf-8') as f:
+                json.dump(manifest, f, default=str, ensure_ascii=False, indent=2)
+                # 成功创建清单文件
+        except Exception as e:
+            # 如果清单文件创建失败，将路径设置为 None
+            manifest_path = None
+
+        # 更新任务完成状态
+        # 即使清单文件创建失败，也可以完成任务
+        # 检查文件是否存在
+        if os.path.exists(output_path):
+            print(f"Output file exists: {output_path}")
+        else:
+            print(f"Warning: Output file does not exist: {output_path}")
+
+        # 检查清单文件是否存在
+        if manifest_path and os.path.exists(manifest_path):
+            print(f"Manifest file exists: {manifest_path}")
+        elif manifest_path:
+            print(f"Warning: Manifest file does not exist: {manifest_path}")
+        else:
+            print("Warning: No manifest path set")
+
+        await update_task(
+            task_id,
+            status="completed",
+            progress=1.0,
+            file_path=output_path,
+            manifest_path=manifest_path,
+            total_duration=total_duration,
+            output_filename=os.path.basename(output_path) if output_path else None
+        )
+
+        print(f"Courseware processing task completed: {task_id}, file: {output_path}")
+
+        # Set task event as completed
+        if task_id in TASK_EVENTS:
+            TASK_EVENTS[task_id].set()
+
+    except Exception as e:
+        # Update task status to failed
+        await update_task(task_id, status="failed", error=str(e))
+
+        # Set task event as completed (even though it failed)
+        if task_id in TASK_EVENTS:
+            TASK_EVENTS[task_id].set()
+
+        print(f"Courseware processing task failed: {task_id}, error: {e}")
+        import traceback
+        traceback.print_exc()
+
+# Helper function to update task status
+async def update_task(task_id: str, **kwargs):
+    """Update task attributes and save to database"""
+    task_found = False
+    for i, t in enumerate(COURSEWARE_TASKS_DB):
+        if t.task_id == task_id:
+            task_found = True
+            # Update provided attributes
+            for key, value in kwargs.items():
+                if hasattr(t, key):
+                    setattr(t, key, value)
+                    print(f"Updated task {task_id} {key}={value}")
+                else:
+                    print(f"Warning: Task {task_id} has no attribute '{key}'")
+                    # 如果属性不存在，动态添加
+                    setattr(t, key, value)
+                    print(f"Added attribute '{key}={value}' to task {task_id}")
+
+            # Always update the timestamp
+            COURSEWARE_TASKS_DB[i].updated_at = datetime.now()
+
+            # 打印任务属性，用于调试
+            print(f"Task {task_id} updated with attributes:")
+            for attr in ['status', 'progress', 'file_path', 'manifest_path', 'output_filename']:
+                if hasattr(t, attr):
+                    print(f"  {attr}: {getattr(t, attr)}")
+            break
+
+    if not task_found:
+        print(f"Warning: Task {task_id} not found in database")
+
+    # Save updates
+    await save_courseware_tasks_db()
+
+# Get task status with improved error handling
+async def get_task_status(task_id: str) -> Optional[CoursewareTaskStatus]:
+    task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+
+    if not task:
+        print(f"Task not found: {task_id}")
+        return None
+
+    # 检查任务属性
+    print(f"Task {task_id} attributes:")
+    for attr in ['status', 'progress', 'file_path', 'manifest_path', 'output_filename', 'total_duration', 'error', 'error_details']:
+        if hasattr(task, attr):
+            print(f"  {attr}: {getattr(task, attr)}")
+        else:
+            print(f"  {attr}: Not set")
+
+    # 创建任务状态对象，确保包含所有必要的字段
+    status = CoursewareTaskStatus(
+        task_id=task.task_id,
+        name=task.name,
+        status=task.status,
+        progress=task.progress,
+        created_at=task.created_at,
+        updated_at=task.updated_at,
+        slides_processed=task.slides_processed,
+        total_slides=task.total_slides,
+        output_filename=task.output_filename if hasattr(task, 'output_filename') else None,
+        file_path=task.file_path if hasattr(task, 'file_path') else None,
+        manifest_path=task.manifest_path if hasattr(task, 'manifest_path') else None,
+        total_duration=task.total_duration if hasattr(task, 'total_duration') else None,
+        error=task.error if hasattr(task, 'error') else None,
+        error_details=task.error_details if hasattr(task, 'error_details') else None
+    )
+
+    # 打印调试信息
+    print(f"Task status for {task_id}: {status.status}, file_path: {status.file_path}")
+    if status.file_path:
+        file_exists = os.path.exists(status.file_path)
+        print(f"File exists: {file_exists}")
+        if not file_exists:
+            dir_exists = os.path.exists(os.path.dirname(status.file_path))
+            print(f"File path directory exists: {dir_exists}")
+            if dir_exists:
+                print(f"Directory contents: {os.listdir(os.path.dirname(status.file_path))}")
+
+                # 如果目录存在但文件不存在，检查是否有类似的文件
+                dir_path = os.path.dirname(status.file_path)
+                file_name = os.path.basename(status.file_path)
+                for f in os.listdir(dir_path):
+                    if task_id in f and f.endswith(os.path.splitext(file_name)[1]):
+                        print(f"Found similar file: {f}")
+                        # 更新文件路径
+                        correct_path = os.path.join(dir_path, f)
+                        print(f"Updating file path from {status.file_path} to {correct_path}")
+                        status.file_path = correct_path
+                        # 同时更新任务对象中的文件路径
+                        for t in COURSEWARE_TASKS_DB:
+                            if t.task_id == task_id:
+                                setattr(t, 'file_path', correct_path)
+                                print(f"Updated task {task_id} file_path={correct_path}")
+                                break
+                        break
+
+    return status
+
+# Get task result with improved error handling
+async def get_task_result(task_id: str) -> Optional[CoursewareTaskStatus]:
+    status = await get_task_status(task_id)
+
+    if not status:
+        print(f"No status found for task: {task_id}")
+        return None
+
+    print(f"Task result for {task_id}: status={status.status}, file_path={status.file_path}")
+
+    if status.status == "completed":
+        # 检查文件路径是否存在
+        if status.file_path:
+            if os.path.exists(status.file_path):
+                print(f"File exists: {status.file_path}")
+                return status
+            else:
+                print(f"File does not exist: {status.file_path}")
+                # 尝试修复文件路径
+                task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+                if task and hasattr(task, 'file_path') and task.file_path:
+                    # 更新状态中的文件路径
+                    status.file_path = task.file_path
+                    if os.path.exists(status.file_path):
+                        print(f"Fixed file path: {status.file_path}")
+                        return status
+
+                # 尝试在 voiced_courseware 目录中查找文件
+                voiced_courseware_dir = os.path.join(settings.UPLOAD_DIR, "voiced_courseware")
+                if os.path.exists(voiced_courseware_dir):
+                    print(f"Searching in voiced_courseware directory: {voiced_courseware_dir}")
+                    for filename in os.listdir(voiced_courseware_dir):
+                        if task_id in filename or (task and task.file_id and task.file_id in filename):
+                            found_file_path = os.path.join(voiced_courseware_dir, filename)
+                            print(f"Found file: {found_file_path}")
+                            # 更新任务文件路径
+                            if task:
+                                for i, t in enumerate(COURSEWARE_TASKS_DB):
+                                    if t.task_id == task_id:
+                                        COURSEWARE_TASKS_DB[i].file_path = found_file_path
+                                        COURSEWARE_TASKS_DB[i].output_filename = filename
+                                        break
+
+                                # 保存更新
+                                await save_courseware_tasks_db()
+
+                            # 更新结果
+                            status.file_path = found_file_path
+                            status.output_filename = filename
+                            return status
+
+                # 如果仍然找不到文件，尝试在目录中查找类似的文件
+                if status.file_path:
+                    dir_path = os.path.dirname(status.file_path)
+                    if os.path.exists(dir_path):
+                        print(f"Searching for similar files in directory: {dir_path}")
+                        for f in os.listdir(dir_path):
+                            if task_id in f and f.endswith('.pptx'):
+                                correct_path = os.path.join(dir_path, f)
+                                print(f"Found similar file: {correct_path}")
+                                status.file_path = correct_path
+
+                                # 更新任务对象中的文件路径
+                                if task:
+                                    setattr(task, 'file_path', correct_path)
+                                    print(f"Updated task {task_id} file_path={correct_path}")
+
+                                return status
+
+                # 如果还是找不到，尝试查找原始文件
+                if task and hasattr(task, 'file_id'):
+                    # 查找与任务相关的课件
+                    courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == task.file_id), None)
+                    if courseware:
+                        # 尝试使用原始文件名
+                        output_dir = os.path.join(settings.UPLOAD_DIR, "voiced_courseware")
+                        original_file_path = os.path.join(output_dir, f"{courseware.file_id}_{courseware.original_filename}")
+                        if os.path.exists(original_file_path):
+                            print(f"Found original file: {original_file_path}")
+                            # 更新状态中的文件路径
+                            status.file_path = original_file_path
+                            status.output_filename = courseware.original_filename
+
+                            # 更新任务对象中的文件路径
+                            setattr(task, 'file_path', original_file_path)
+                            setattr(task, 'output_filename', courseware.original_filename)
+                            print(f"Updated task {task_id} file_path={original_file_path}")
+
+                            # 保存更新
+                            await save_courseware_tasks_db()
+
+                            return status
+        else:
+            print(f"No file path in status for task: {task_id}")
+            # 尝试从任务中获取文件路径
+            task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+            if task and hasattr(task, 'file_path') and task.file_path:
+                status.file_path = task.file_path
+                if os.path.exists(status.file_path):
+                    print(f"Added file path from task: {status.file_path}")
+                    return status
+                else:
+                    print(f"Task has file path but file does not exist: {task.file_path}")
+            else:
+                print(f"Task has no file path: {task_id if task else 'task not found'}")
+    else:
+        print(f"Task not completed: {status.status}")
+
+    return None
+
+# List all courseware with additional metadata
+# List all courseware with additional metadata
+async def list_all_courseware() -> List[Dict[str, Any]]:
+    """Get list of all courseware"""
+    try:
+        print(f"Getting courseware list, total items: {len(COURSEWARE_DB)}")
+        result = []
+        for i, cw in enumerate(COURSEWARE_DB):
+            try:
+                item = {
+                    "file_id": cw.file_id,
+                    "name": cw.name,
+                    "original_filename": cw.original_filename,
+                    "content_type": cw.content_type,
+                    "file_size": cw.file_size,
+                    "slides_count": cw.slides_count,
+                    "created_at": cw.created_at,
+                    "updated_at": cw.updated_at,
+                    "has_extraction": bool(cw.extracted_text)
+                }
+                result.append(item)
+            except Exception as e:
+                print(f"Error processing courseware item {i}: {e}")
+                import traceback
+                traceback.print_exc()
+        print(f"Successfully processed {len(result)} courseware items")
+        return result
+    except Exception as e:
+        print(f"Error in list_all_courseware: {e}")
+        import traceback
+        traceback.print_exc()
+        # Return empty list instead of failing
+        return []
+
+# List all tasks with improved metadata
+async def list_all_tasks() -> List[Dict[str, Any]]:
+    """Get list of all voice synthesis tasks"""
+    try:
+        print(f"Getting tasks list, total items: {len(COURSEWARE_TASKS_DB)}")
+        result = []
+        for i, task in enumerate(COURSEWARE_TASKS_DB):
+            try:
+                item = {
+                    "task_id": task.task_id,
+                    "file_id": task.file_id,
+                    "name": task.name,
+                    "voice_id": task.voice_id,
+                    "status": task.status,
+                    "progress": task.progress,
+                    "slides_processed": task.slides_processed,
+                    "total_slides": task.total_slides,
+                    "created_at": task.created_at,
+                    "updated_at": task.updated_at,
+                    "total_duration": task.total_duration if hasattr(task, 'total_duration') else None,
+                    "output_filename": task.output_filename if hasattr(task, 'output_filename') else None,
+                    "error": task.error if hasattr(task, 'error') else None
+                }
+                result.append(item)
+            except Exception as e:
+                print(f"Error processing task item {i}: {e}")
+                import traceback
+                traceback.print_exc()
+        print(f"Successfully processed {len(result)} task items")
+        # Sort by updated_at or created_at in descending order
+        try:
+            sorted_result = sorted(result, key=lambda x: x.get("updated_at", x.get("created_at")), reverse=True)
+            return sorted_result
+        except Exception as e:
+            print(f"Error sorting tasks: {e}")
+            import traceback
+            traceback.print_exc()
+            return result
+    except Exception as e:
+        print(f"Error in list_all_tasks: {e}")
+        import traceback
+        traceback.print_exc()
+        # Return empty list instead of failing
+        return []
+
+# Wait for task completion (for synchronous workflows)
+async def wait_for_task_completion(task_id: str, timeout: float = 120.0) -> Optional[CoursewareTaskStatus]:
+    """
+    Wait for a task to complete with timeout support
+
+    Args:
+        task_id: The task ID to wait for
+        timeout: Maximum time to wait in seconds
+
+    Returns:
+        Task status or None if timeout occurred
+    """
+    if task_id not in TASK_EVENTS:
+        TASK_EVENTS[task_id] = asyncio.Event()
+
+        # Check if task is already completed
+        task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+        if task and task.status in ["completed", "failed"]:
+            TASK_EVENTS[task_id].set()
+
+    try:
+        # Wait for the task event with timeout
+        await asyncio.wait_for(TASK_EVENTS[task_id].wait(), timeout)
+
+        # Get and return the final status
+        return await get_task_status(task_id)
+    except asyncio.TimeoutError:
+        print(f"Timeout waiting for task: {task_id}")
+        return None
+    finally:
+        # Clean up the event
+        if task_id in TASK_EVENTS:
+            del TASK_EVENTS[task_id]
+
+# Optimize TTS parameters for a specific voice
+async def optimize_tts_params(voice_id: str) -> Dict[str, Any]:
+    """
+    Get optimized TTS parameters for a specific voice based on voice characteristics
+
+    Args:
+        voice_id: Voice ID to optimize for
+        text_sample: Optional text sample to use for optimization
+
+    Returns:
+        Dictionary of optimized TTS parameters
+    """
+    # Default parameters
+    default_params = {
+        "mode": "sft",
+        "speed": 1.0,
+        "emotion": "neutral",
+        "pitch": 0.0,
+        "energy": 1.0,
+        "pause_factor": 1.0,
+        "seed": int(time.time()) % 10000
+    }
+
+    # Try to optimize based on voice characteristics if voice_service is available
+    try:
+        from app.services.voice_service import VOICE_SAMPLES_DB
+
+        # Find voice sample
+        voice_sample = next((v for v in VOICE_SAMPLES_DB if v.id == voice_id), None)
+
+        if voice_sample and voice_sample.embedding_path and os.path.exists(voice_sample.embedding_path):
+            try:
+                # Load voice features
+                with open(voice_sample.embedding_path, 'r') as f:
+                    features = json.load(f)
+
+                # Adjust parameters based on voice characteristics
+                optimized_params = default_params.copy()
+
+                # Adjust speed based on voice features
+                if "pitch_mean" in features and features["pitch_mean"] > 0:
+                    # Higher pitch voices often sound better slightly slower
+                    if features["pitch_mean"] > 200:
+                        optimized_params["speed"] = 0.95
+                    # Lower pitch voices often sound better slightly faster
+                    elif features["pitch_mean"] < 140:
+                        optimized_params["speed"] = 1.05
+
+                # Adjust energy based on voice features
+                if "energy_mean" in features and features["energy_mean"] > 0:
+                    # For quieter voices, increase energy slightly
+                    if features["energy_mean"] < 0.1:
+                        optimized_params["energy"] = 1.1
+
+                # Return optimized parameters
+                return optimized_params
+            except Exception as e:
+                print(f"Error optimizing TTS parameters: {e}")
+
+        # If optimization failed, return default parameters
+        return default_params
+    except ImportError:
+        # If voice_service is not available, return default parameters
+        return default_params
+
+# Initialize the service
+async def start_service():
+    """Start the course service and initialize dependencies"""
+    print("Starting course service...")
+    await init_course_service()
+
+    # Initialize TTS service if available
+    try:
+        from app.services.cosyvoice_tts import init_cosyvoice_tts_service
+        print("Initializing TTS service...")
+        await init_cosyvoice_tts_service()
+    except ImportError:
+        print("CosyVoice TTS service module not found or could not be imported, skipping initialization")
+    except Exception as e:
+        print(f"Error initializing TTS service: {e}")
+        import traceback
+        traceback.print_exc()
+
+    print("Course service started successfully")
+
+# Create a synchronous initialization function that kicks off the async init
+# Initialize the service when the module is imported
+def initialize():
+    """Initialize the course service when module is imported"""
+    loop = asyncio.get_event_loop()
+    try:
+        if loop.is_running():
+            # If we're already in an event loop, create a task
+            asyncio.create_task(init_course_service())
+
+            # Initialize TTS service if available
+            try:
+                from app.services.cosyvoice_tts import init_cosyvoice_tts_service
+                asyncio.create_task(init_cosyvoice_tts_service())
+            except ImportError:
+                print("CosyVoice TTS service module not found, skipping initialization")
+            except Exception as e:
+                print(f"Error initializing TTS service: {e}")
+        else:
+            # Otherwise, run until complete
+            loop.run_until_complete(init_course_service())
+
+            # Initialize TTS service if available
+            try:
+                from app.services.cosyvoice_tts import init_cosyvoice_tts_service
+                loop.run_until_complete(init_cosyvoice_tts_service())
+            except ImportError:
+                print("CosyVoice TTS service module not found, skipping initialization")
+            except Exception as e:
+                print(f"Error initializing TTS service: {e}")
+    except RuntimeError:
+        # Handle case when there is no running event loop
+        # This can happen in some test environments or specific deployment scenarios
+        print("No running event loop detected, service will be initialized upon first request")
+
+# Call the initialization function
+initialize()

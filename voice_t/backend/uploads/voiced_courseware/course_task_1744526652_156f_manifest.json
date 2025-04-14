@@ -1,0 +1,71 @@
+{
+  "task_id": "1744526652_156f",
+  "courseware": {
+    "file_id": "course_1744526650_888b",
+    "name": "text004",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_1744526650_888b_text1.pptx",
+  "total_duration": 82.08253968253968,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "中国古典文学欣赏 同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。 首先我们来看一首著名的古诗——王维的《相思》。 这首诗描绘了春天到来时红豆生长的情景，表达了诗人对远方亲人深深的思念之情。通过这首诗的学习，我们可以了解到古代文学中的情感表达方式以及诗人如何运用自然景象来传达内心的感受。 接下来，让我们一起欣赏这首诗的原文和配图，感受其中蕴含的情感和意境。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 13.154104308390023
+    },
+    {
+      "slide_id": 1,
+      "title": "中国古典文学欣赏\n\n同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。\n\n首先我...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744526652_156f_audio\\slide_1_chunk_1.wav",
+          "duration": 13.154104308390023
+        }
+      ],
+      "total_duration": 13.154104308390023
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "现在我们转向另一位伟大的文学家——诸葛亮。 诸葛亮不仅是三国时期的政治家和军事家，还是一位杰出的文学家。他的文章以其深邃的思想和卓越的文笔闻名于世。 在这张图片中，我们看到了诸葛亮的一篇文章的部分内容，《前出师表》。这篇文章不仅展示了他对国家大事的深刻见解，还体现了他对忠诚和公正的重视。 通过这篇文献的学习，我们可以更好地理解诸葛亮的历史地位和他的文学成就。",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 13.931972789115646
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 1,
+      "text": "今天的课程就到这里，希望大家能够从这些经典的诗词和文献中学到更多关于中国古代文学的知识。 希望你们在今后的日子里，继续深入研究中国的传统文化，感受其中的魅力和智慧。 希望通过这次课程的学习，大家对中国古典文学有了更深的认识和理解。期待下次课程再见！",
+      "audio_file": "slide_2_chunk_2.wav",
+      "duration": 13.955192743764172
+    },
+    {
+      "slide_id": 2,
+      "title": "现在我们转向另一位伟大的文学家——诸葛亮。\n\n诸葛亮不仅是三国时期的政治家和军事家，还是一位杰出的文...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744526652_156f_audio\\slide_2_chunk_1.wav",
+          "duration": 13.931972789115646
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744526652_156f_audio\\slide_2_chunk_2.wav",
+          "duration": 13.955192743764172
+        }
+      ],
+      "total_duration": 27.88716553287982
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 6652
+  }
+}

@@ -1,0 +1,5 @@
+main.py
+ppt-extractor.py
+prompts-config.py
+lecture-generator.py
+为ppt文本相关问题的功能函数包

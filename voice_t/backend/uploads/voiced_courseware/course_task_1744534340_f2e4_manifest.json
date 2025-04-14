@@ -1,0 +1,83 @@
+{
+  "task_id": "1744534340_f2e4",
+  "courseware": {
+    "file_id": "course_1744534336_8ffc",
+    "name": "test002",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_1744534336_8ffc_text1.pptx",
+  "total_duration": 116.93569160997733,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "中国古典文学欣赏 同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。 首先我们来看一首著名的古诗——王维的《相思》。 这首诗描绘了春天到来时红豆生长的情景，表达了诗人对远方亲人深深的思念之情。通过这首诗的学习，我们可以了解到古代文学中的情感表达方式以及诗人如何运用自然景象来传达内心的感受。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 13.154104308390023
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 1,
+      "text": "接下来，让我们一起欣赏这首诗的原文及其配图。注意观察图片中的植物图案和色彩搭配，思考它们是如何增强诗歌意境的。",
+      "audio_file": "slide_1_chunk_2.wav",
+      "duration": 10.750839002267574
+    },
+    {
+      "slide_id": 1,
+      "title": "中国古典文学欣赏\n\n同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。\n\n首先我...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744534340_f2e4_audio\\slide_1_chunk_1.wav",
+          "duration": 13.154104308390023
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744534340_f2e4_audio\\slide_1_chunk_2.wav",
+          "duration": 10.750839002267574
+        }
+      ],
+      "total_duration": 23.904943310657597
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "现在我们转向另一位伟大的文学家——诸葛亮。 诸葛亮不仅是三国时期的杰出政治家和军事家，还是一位才华横溢的作家。他的文章深邃有力，尤其是《出师表》这篇千古佳作，展现了他对国家命运的深切关怀和对理想政治理想的追求。 下面我们一起阅读《前出师表》的部分内容，体会其中的思想感情和历史智慧。 今天的课程就到这里，希望大家能够从这些经典的文学作品中学到更多关于古代文化的知识。",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 21.989297052154196
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 1,
+      "text": "回顾一下我们学到的内容： - 王维的《相思》展示了诗人对亲情的深情厚意。 - 诸葛亮的《出师表》体现了他对国家的责任感和对理想的执着追求。 希望你们在今后的学习生活中也能多多接触这样的优秀作品，不断提升自己的文化素养。 今天的课程到此结束，感谢大家的参与！",
+      "audio_file": "slide_2_chunk_2.wav",
+      "duration": 12.57360544217687
+    },
+    {
+      "slide_id": 2,
+      "title": "现在我们转向另一位伟大的文学家——诸葛亮。\n\n诸葛亮不仅是三国时期的杰出政治家和军事家，还是一位才华...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744534340_f2e4_audio\\slide_2_chunk_1.wav",
+          "duration": 21.989297052154196
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744534340_f2e4_audio\\slide_2_chunk_2.wav",
+          "duration": 12.57360544217687
+        }
+      ],
+      "total_duration": 34.56290249433107
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 4340
+  }
+}

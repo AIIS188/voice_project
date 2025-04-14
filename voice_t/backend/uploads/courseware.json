@@ -1,0 +1,312 @@
+[
+  {
+    "file_id": "course_1744450711_6895",
+    "name": "text1",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744450711_6895_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "首先我们来看一首唐代诗人王维的《相思》。",
+        "content": "同学们，今天我们一起来探索中国古代的经典诗词以及历史上著名的文人墨客。\n\n这首诗描绘了一个宁静的春天景象，通过红豆象征着对远方之人的思念。诗歌的语言简单易懂，但意境深远，非常适合孩子们学习和欣赏。\n\n接下来，让我们一起回顾一下这首诗的内容：\n\n红豆生南国，\n春来发几枝。\n愿君多采撷，\n此物最相思。\n\n在这首诗中，诗人通过对红豆生长环境的描写，巧妙地表达了自己的情感。",
+        "notes": "重点总结：\n- 诗歌的主题——思念\n- 诗歌的意象——红豆\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论诗歌的情感表达方式"
+      },
+      {
+        "slide_id": 2,
+        "title": "接下来，我们介绍一位非常著名的历史人物——诸葛亮。",
+        "content": "诸葛亮是中国三国时期的政治家和文学家，他的智慧和才能在中国历史上留下了深刻的印记。\n\n诸葛亮的一生充满了传奇色彩，从他被刘备三次邀请出山开始，到后来辅佐刘备建立蜀汉政权，再到北伐中原，他始终致力于实现自己的政治理想。\n\n诸葛亮不仅在军事上有卓越的才能，还在文学方面有着杰出的表现。他的代表作之一就是《出师表》，这篇文献不仅是对他个人经历的记录，也是他对国家未来的期望。",
+        "notes": "重点总结：\n- 诸葛亮的主要贡献——军事和文学\n- 《出师表》的核心思想——忠诚和公正\n\n互动环节：\n- 请大家朗读《出师表》的部分内容\n- 小组讨论诸葛亮的性格特点"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程就到这里，希望大家能够通过这些经典的诗词和历史人物的学习，感受到中华文化的博大精深。",
+        "content": "最后，我想提醒大家，无论是学习诗词还是了解历史，都要注重理解其中的文化内涵和精神价值。",
+        "notes": "互动环节：\n- 请大家分享自己最喜欢的诗词或历史人物\n- 自由提问和讨论\n\n结束语：\n希望通过这次课程，大家对中国传统文化有了更深的理解和认识。希望你们在今后的学习生活中，能够继续探索和传承这份宝贵的文化遗产。"
+      }
+    ],
+    "created_at": "2025-04-12 17:38:31.254958",
+    "updated_at": "2025-04-12 17:44:47.223397"
+  },
+  {
+    "file_id": "course_1744452925_8783",
+    "name": "text1",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744452925_8783_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 0,
+    "extracted_text": [],
+    "created_at": "2025-04-12 18:15:25.703688",
+    "updated_at": null
+  },
+  {
+    "file_id": "course_1744453633_9264",
+    "name": "text1",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744453633_9264_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 0,
+    "extracted_text": [],
+    "created_at": "2025-04-12 18:27:13.598499",
+    "updated_at": null
+  },
+  {
+    "file_id": "course_1744460726_4085",
+    "name": "text111",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744460726_4085_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 0,
+    "slides_count": 0,
+    "extracted_text": [],
+    "created_at": "2025-04-12 20:25:26.959061",
+    "updated_at": null
+  },
+  {
+    "file_id": "course_1744461731_6793",
+    "name": "text0",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744461731_6793_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 0,
+    "slides_count": 1,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "Processing Error",
+        "content": "Error processing PPT file: Package not found at 'D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744461731_6793_text1.pptx'",
+        "notes": ""
+      }
+    ],
+    "created_at": "2025-04-12 20:42:11.605433",
+    "updated_at": "2025-04-12 20:42:16.313729"
+  },
+  {
+    "file_id": "course_1744464184_1681",
+    "name": "test01",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744464184_1681_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 0,
+    "slides_count": 1,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "Processing Error",
+        "content": "Error processing PPT file: Package not found at 'D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744464184_1681_text1.pptx'",
+        "notes": ""
+      }
+    ],
+    "created_at": "2025-04-12 21:23:04.317390",
+    "updated_at": "2025-04-12 21:23:17.260308"
+  },
+  {
+    "file_id": "course_1744464692_1386",
+    "name": "test02",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744464692_1386_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 0,
+    "slides_count": 1,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "Processing Error",
+        "content": "Error processing PPT file: Package not found at 'D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744464692_1386_text1.pptx'",
+        "notes": ""
+      }
+    ],
+    "created_at": "2025-04-12 21:31:32.299885",
+    "updated_at": "2025-04-12 21:31:37.397673"
+  },
+  {
+    "file_id": "course_1744465469_8482",
+    "name": "text001",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744465469_8482_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "这张图片展示了唐代诗人王维的一首著名古诗《相思》。",
+        "content": "同学们，今天我们一起来领略中国古代文学的魅力。\n\n诗歌描述了红豆生长在南方的情景，并表达了诗人对红豆的喜爱以及红豆象征思念的情感。\n\n背景是浅蓝色的天空和白云，给人一种宁静的感觉。左上角和右下角都有红色的果实和绿色的叶子，中间部分有一些模糊的花朵图案，颜色为淡粉色和黄色。图片顶部还有几个彩色的问题符号，增加了趣味性。\n\n整体设计风格简洁，色彩柔和，非常适合儿童阅读。",
+        "notes": "重点总结：\n- 红豆的象征意义\n- 诗歌表达的情感\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论红豆象征的意义"
+      },
+      {
+        "slide_id": 2,
+        "title": "接下来我们介绍一位著名的三国时期的政治家和文学家——诸葛亮。",
+        "content": "诸葛亮出生于山东沂水县南的一个官宦家庭，早年丧父，独自耕种于南阳隆中。他胸怀大志，常常把自己比作管仲和乐毅。\n\n建安十二年，刘备三次拜访诸葛亮，请他出山共谋大业。次年，在诸葛亮的帮助下，刘备联合孙权，在赤壁击败曹操。之后，刘备占领荆州，攻取益州，形成了魏、蜀、吴三分天下的局面。\n\n刘备称帝后，任命诸葛亮为丞相。刘禅继位后，蜀汉的所有事务都由诸葛亮决定。诸葛亮曾南征平定少数民族地区，有多次战役记录。\n\n诸葛亮的文学成就主要体现在散文方面，他的代表作包括《出师表》、《后出师表》和《正议》等。\n\n这段文字摘自《前出师表》，表达了他对国家大事的看法和建议，强调了忠诚、公正和贤能的重要性。",
+        "notes": "重点总结：\n- 诸葛亮的历史地位\n- 《前出师表》的内容要点\n\n互动环节：\n- 请大家朗读《前出师表》的部分内容\n- 小组讨论诸葛亮的历史贡献"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程就到这里，希望大家能够对中国古代文学有更多的了解和兴趣。",
+        "content": "",
+        "notes": "结束语：\n希望同学们课后继续阅读更多优秀的古典文学作品，感受其中的文化魅力。"
+      }
+    ],
+    "created_at": "2025-04-12 21:44:29.344458",
+    "updated_at": "2025-04-12 21:45:41.655071"
+  },
+  {
+    "file_id": "course_1744466608_5389",
+    "name": "text1",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744466608_5389_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "这张图片展示了唐代诗人王维的一首著名古诗《相思》。",
+        "content": "同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。\n\n诗歌描述了红豆生长在南方的情景，表达了对远方亲人深深的思念。通过这首诗的学习，我们可以感受到古代文学的美妙之处，同时也能提升我们的审美能力。\n\n图片中的背景是浅蓝色的天空和白云，营造出一种宁静和谐的氛围。左上角和右下角都有红色的果实和绿色的叶子，中间还有模糊的花朵图案，整体设计简洁而充满童趣，非常适合儿童学习使用。",
+        "notes": "重点总结：\n- 《相思》的诗意\n- 诗歌的艺术表现手法\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论诗中表达的情感"
+      },
+      {
+        "slide_id": 2,
+        "title": "接下来我们介绍一位伟大的古代政治家和文学家——诸葛亮。",
+        "content": "诸葛亮生活在三国时期，是刘备的重要谋士，帮助刘备建立了蜀汉政权。他的智慧和才能被广泛赞誉，尤其是在军事战略和政治管理方面。\n\n诸葛亮的文学成就主要体现在散文上，其中最为著名的篇章是《出师表》。这段文字不仅展现了他对国家大事的深刻见解，还强调了忠诚和公正的价值观。\n\n图片中展示的是《前出师表》的部分内容，从中可以看出诸葛亮对国家未来的规划和期望。",
+        "notes": "重点总结：\n- 诸葛亮的历史贡献\n- 《前出师表》的主要思想\n\n互动环节：\n- 请大家阅读《前出师表》的内容\n- 分享自己对诸葛亮的理解"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程到此结束，希望大家能够从这些经典的诗词和文章中学到更多关于中国古代文化的知识。",
+        "content": "通过这次学习，我们不仅提升了文学鉴赏的能力，还增强了对中国传统文化的兴趣和热爱。",
+        "notes": "结束语：\n希望同学们课后继续阅读更多的古典文学作品，进一步丰富自己的文化素养。"
+      }
+    ],
+    "created_at": "2025-04-12 22:03:28.658613",
+    "updated_at": "2025-04-12 22:04:29.518490"
+  },
+  {
+    "file_id": "course_1744468281_2648",
+    "name": "text002",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744468281_2648_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "首先我们来看一首著名的古诗——王维的《相思》。",
+        "content": "同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。\n\n这首诗描绘了春天到来时红豆生长的情景，表达了诗人对远方亲人深深的思念之情。通过这首诗的学习，我们可以了解到古代文学中的情感表达方式以及诗人如何运用自然景象来传达内心的感受。\n\n接下来，让我们一起欣赏这首诗的原文和配图，感受其中蕴含的情感和意境。",
+        "notes": "重点总结：\n- 王维的诗歌特点\n- 《相思》的主题和情感\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论诗中表达的情感"
+      },
+      {
+        "slide_id": 2,
+        "title": "现在我们转向另一位伟大的文学家——诸葛亮。",
+        "content": "诸葛亮不仅是三国时期的政治家和军事家，还是一位杰出的文学家。他的文章以其深邃的思想和卓越的文笔闻名于世。\n\n在这张图片中，我们看到了诸葛亮的一篇文章的部分内容，《前出师表》。这篇文章不仅展示了他对国家大事的深刻见解，还体现了他对忠诚和公正的重视。\n\n通过这篇文献的学习，我们可以更好地理解诸葛亮的历史地位和他的文学成就。",
+        "notes": "重点总结：\n- 诸葛亮的历史贡献\n- 《前出师表》的主要思想\n\n互动环节：\n- 请大家阅读《前出师表》的内容\n- 分享自己对文中观点的理解"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程就到这里，希望大家能够从这些经典的诗词和文献中学到更多关于中国古代文学的知识。",
+        "content": "希望你们在今后的日子里，继续深入研究中国的传统文化，感受其中的魅力和智慧。",
+        "notes": "结束语：\n希望通过这次课程的学习，大家对中国古典文学有了更深的认识和理解。期待下次课程再见！"
+      }
+    ],
+    "created_at": "2025-04-12 22:31:21.960000",
+    "updated_at": "2025-04-12 22:32:15.140763"
+  },
+  {
+    "file_id": "course_1744469758_8020",
+    "name": "text003",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744469758_8020_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "这张图片展示了唐代诗人王维的一首著名古诗《相思》。",
+        "content": "同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。\n\n诗歌内容如下:\n\n红豆生南国,\n春来发几枝.\n愿君多采撷,\n此物最相思.\n\n这首诗描绘了红豆生长在南方的情景，表达了诗人对远方亲人深深的思念之情。通过这首诗的学习，我们可以了解到古代文学中的情感表达方式以及诗歌的艺术魅力。",
+        "notes": "重点总结：\n- 诗歌的情感表达\n- 诗歌的艺术手法\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论诗中‘红豆’象征的意义"
+      },
+      {
+        "slide_id": 2,
+        "title": "接下来我们介绍一位著名的三国时期的政治家和文学家——诸葛亮。",
+        "content": "诸葛亮，字孔明，出生于山东沂水县南的一个官宦家庭。他在年轻时就展现出了非凡的才华和远大的抱负。\n\n在刘备三次拜访他的草庐之后，诸葛亮决定辅佐刘备建立蜀汉政权。在他的策划下，刘备在赤壁之战中取得了胜利，并最终占领了荆州和益州，形成了魏、蜀、吴三分天下的局面。\n\n诸葛亮不仅在军事上有卓越的表现，还在治理国家方面提出了许多重要的建议。例如，《出师表》中提到要开张圣听，公平对待所有人，避免偏袒，这些观点至今仍有现实意义。",
+        "notes": "重点总结：\n- 诸葛亮的历史贡献\n- 诸葛亮的思想影响\n\n互动环节：\n- 请大家阅读诸葛亮的部分著作\n- 分享自己最喜欢的诸葛亮故事"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程到此结束，希望大家能够从这两首诗和诸葛亮的故事中学到一些关于古代文学的知识。",
+        "content": "希望你们在今后的日子里继续热爱文学，享受阅读的乐趣。",
+        "notes": "结束语：\n希望通过这次课程，大家对中国古代文学有了更深的理解和认识。"
+      }
+    ],
+    "created_at": "2025-04-12 22:55:58.107135",
+    "updated_at": "2025-04-12 22:57:20.280973"
+  },
+  {
+    "file_id": "course_1744470601_7997",
+    "name": "text004",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744470601_7997_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "这张图片展示了唐代诗人王维的一首著名古诗《相思》。",
+        "content": "同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。\n\n诗歌描述了红豆生长在南方的情景，表达了对远方亲人深深的思念之情。通过这首诗的学习，我们可以了解到古代文学中的情感表达方式以及诗歌的艺术魅力。\n\n图片上方的装饰性植物图案增添了视觉美感，整体设计简洁而富有童趣，非常适合儿童学习使用。",
+        "notes": "重点总结：\n- 《相思》的内容和主题\n- 诗歌的艺术表现手法\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论诗中表达的情感"
+      },
+      {
+        "slide_id": 2,
+        "title": "接下来我们介绍一位伟大的历史人物——诸葛亮。",
+        "content": "诸葛亮是三国时期的政治家和文学家，他的智慧和才能在中国历史上留下了深刻的印记。本文介绍了诸葛亮的人生经历和他的文学成就。\n\n图片中展示的是《前出师表》的部分内容，这篇文献表达了他对国家大事的看法和建议，强调了忠诚、公正和贤能的重要性。",
+        "notes": "重点总结：\n- 诸葛亮的历史地位和贡献\n- 《前出师表》的主要思想\n\n互动环节：\n- 请大家阅读《前出师表》片段\n- 分享自己对诸葛亮的印象"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程到此结束，希望大家能够从这些经典的诗词和历史人物中汲取灵感，提升自己的文化素养。",
+        "content": "感谢大家的参与，希望你们在今后的学习生活中也能多多接触和欣赏中国的传统文化。",
+        "notes": "结束语：\n希望通过这次课程，大家对中国古典文学有了更深的理解和兴趣。"
+      }
+    ],
+    "created_at": "2025-04-12 23:10:01.012793",
+    "updated_at": "2025-04-12 23:11:15.069352"
+  },
+  {
+    "file_id": "course_1744473316_7960",
+    "name": "text005",
+    "original_filename": "text1.pptx",
+    "file_path": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\courseware\\course_1744473316_7960_text1.pptx",
+    "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "file_size": 2124201,
+    "slides_count": 2,
+    "extracted_text": [
+      {
+        "slide_id": 1,
+        "title": "这张图片展示了唐代诗人王维的一首著名古诗《相思》。",
+        "content": "同学们，今天我们开始学习中国古代的经典文学作品。\n\n诗歌描述了红豆生长在南方的情景，并表达了对远方亲人深深的思念之情。通过这首诗的学习，我们可以感受到古代文学的独特魅力，同时也能提升我们的审美能力。",
+        "notes": "重点总结：\n- 诗歌的主题\n- 诗歌的情感表达\n\n互动环节：\n- 请大家朗读这首诗\n- 小组讨论诗中的情感表达"
+      },
+      {
+        "slide_id": 2,
+        "title": "接下来我们介绍一位著名的三国时期的政治家和文学家——诸葛亮。",
+        "content": "诸葛亮不仅在军事上有卓越的才能，还以其深厚的文学造诣闻名。他的代表作之一就是《出师表》，这篇文稿展现了他对刘备的忠诚以及对蜀汉未来的深切期望。",
+        "notes": "重点总结：\n- 诸葛亮的历史地位\n- 《出师表》的主要内容\n\n互动环节：\n- 请大家阅读《出师表》的部分内容\n- 分享自己对诸葛亮的看法"
+      },
+      {
+        "slide_id": 3,
+        "title": "今天的课程到此结束，希望大家能够对中国古典文学产生浓厚的兴趣。",
+        "content": "",
+        "notes": "结束语：\n希望同学们在今后的学习中继续探索更多优秀的古典文学作品。"
+      }
+    ],
+    "created_at": "2025-04-12 23:55:16.158536",
+    "updated_at": "2025-04-12 23:56:36.699922"
+  }
+]

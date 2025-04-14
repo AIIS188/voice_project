@@ -1,0 +1,95 @@
+{
+  "task_id": "1744524037_e18f",
+  "courseware": {
+    "file_id": "course_1744524032_6ebb",
+    "name": "text003",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_1744524032_6ebb_text1.pptx",
+  "total_duration": 173.0351020408163,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "中国古典文学欣赏 同学们，今天我们一起来领略中国古代文学的魅力。 这张图片展示了唐代诗人王维的一首著名古诗《相思》。 诗歌描述了红豆生长在南方的情景，并表达了诗人对红豆的喜爱以及红豆象征思念的情感。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 19.690521541950112
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 1,
+      "text": "图片中的背景是浅蓝色的天空和白云，给人一种宁静的感觉。左上角和右下角都有红色的果实（可能是红豆）挂在树枝上，叶子呈绿色。中间部分有一些模糊的花朵图案，颜色为淡粉色和黄色。图片顶部还有几个彩色的问题符号，增加了趣味性。 整体设计风格简洁，色彩柔和，非常适合儿童阅读。",
+      "audio_file": "slide_1_chunk_2.wav",
+      "duration": 16.288798185941044
+    },
+    {
+      "slide_id": 1,
+      "title": "中国古典文学欣赏\n\n同学们，今天我们一起来领略中国古代文学的魅力。\n\n这张图片展示了唐代诗人王维的一...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744524037_e18f_audio\\slide_1_chunk_1.wav",
+          "duration": 19.690521541950112
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744524037_e18f_audio\\slide_1_chunk_2.wav",
+          "duration": 16.288798185941044
+        }
+      ],
+      "total_duration": 35.97931972789115
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "接下来我们介绍一位著名的三国时期的政治家和文学家——诸葛亮。 诸葛亮，字孔明，琅邪阳都（今山东沂水县南）人，早年丧父，独自耕种于南阳隆中（今湖北襄阳）。他胸怀大志，常常把自己比作管仲和乐毅。 建安十二年（207年），刘备三次拜访诸葛亮，请他出山共谋大业。次年，在诸葛亮的帮助下，刘备联合孙权，在赤壁击败曹操。之后，他又占领荆州，攻取益州，最终形成了魏、蜀、吴三分天下的局面。",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 15.429659863945579
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 1,
+      "text": "刘备称帝后，任命诸葛亮为丞相。刘禅继位后，蜀汉的所有事务都由诸葛亮决定。他还曾南征平定少数民族地区，有七擒孟获等事迹。后来，他率领军队北驻汉中，多次伐魏，但因兵力不足，粮草不济，未能取得胜利，最终病逝于军中。 诸葛亮的文学成就主要体现在散文方面，他的代表作包括《出师表》（又称“前出师表”）、《后出师表》、《正议》等。",
+      "audio_file": "slide_2_chunk_2.wav",
+      "duration": 21.455238095238094
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 2,
+      "text": "这段文字摘自《前出师表》，表达了他对国家大事的看法和建议，强调了忠诚和公正的重要性，并提到了一些历史人物的名字，如先帝、桓、灵等。 今天的课程就到这里，希望大家能够对中国古典文学有更多的了解和兴趣。 希望同学们课后继续阅读更多优秀的古典文学作品，感受其中的文化魅力。",
+      "audio_file": "slide_2_chunk_3.wav",
+      "duration": 13.653333333333334
+    },
+    {
+      "slide_id": 2,
+      "title": "接下来我们介绍一位著名的三国时期的政治家和文学家——诸葛亮。\n\n诸葛亮，字孔明，琅邪阳都（今山东沂水...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744524037_e18f_audio\\slide_2_chunk_1.wav",
+          "duration": 15.429659863945579
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744524037_e18f_audio\\slide_2_chunk_2.wav",
+          "duration": 21.455238095238094
+        },
+        {
+          "chunk_id": 2,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744524037_e18f_audio\\slide_2_chunk_3.wav",
+          "duration": 13.653333333333334
+        }
+      ],
+      "total_duration": 50.53823129251701
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 4037
+  }
+}

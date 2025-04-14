@@ -1,0 +1,42 @@
+from setuptools import setup, find_packages
+
+setup(
+    name="voice-teaching-assistant",
+    version="1.0.0",
+    description="AI语音教学助手系统",
+    author="",
+    author_email="",
+    packages=find_packages(),
+    install_requires=[
+        "fastapi>=0.109.2",
+        "uvicorn>=0.27.1",
+        "sqlalchemy>=2.0.27",
+        "alembic>=1.13.1",
+        "pydantic>=2.6.1",
+        "python-multipart>=0.0.9",
+        "python-jose[cryptography]>=3.3.0",
+        "passlib[bcrypt]>=1.7.4",
+        "python-dotenv>=1.0.1",
+        "numpy>=1.26.4",
+        "pandas>=2.2.0",
+        "scikit-learn>=1.4.0",
+        "torch>=2.2.0",
+        "transformers>=4.37.2",
+        "soundfile>=0.12.1",
+        "librosa>=0.10.1",
+    ],
+    extras_require={
+        "dev": [
+            "pytest>=8.0.0",
+            "pytest-cov>=4.1.0",
+            "pytest-asyncio>=0.23.5",
+            "black>=24.1.1",
+            "isort>=5.13.2",
+            "flake8>=7.0.0",
+            "mypy>=1.8.0",
+            "pylint>=3.0.3",
+            "pre-commit>=3.6.0",
+        ],
+    },
+    python_requires=">=3.9",
+) 

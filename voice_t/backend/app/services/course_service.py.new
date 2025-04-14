@@ -1,0 +1,711 @@
+"""Course Service Module
+
+This module provides functions for courseware processing and voiced courseware generation.
+"""
+import os
+import json
+import shutil
+import re
+import sys
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, Any, Optional, List, Union
+from fastapi import UploadFile, BackgroundTasks
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+COSYVOICE_PATH = os.path.join(ROOT_DIR, "cosyvoice")
+sys.path.append(COSYVOICE_PATH)
+
+from pydantic import BaseModel
+
+from app.models.course import CoursewareDB, CoursewareTaskDB, CoursewareTextExtraction, CoursewareTaskStatus, SlideContent
+from app.services.cosyvoice_tts import (
+    synthesize_speech, get_tts_task_status, get_tts_task_result,
+    get_cosyvoice_model, synthesize_speech_streaming, COSYVOICE_AVAILABLE
+)
+from app.core.config import settings
+
+# Import PPT processing and lecture generation related modules
+from app.core.extractor_main import run_pipeline
+from app.core.outppt import PPTExtractor
+from app.core.ppt_lecture import LectureGenerator
+
+# Simulated database storage
+COURSEWARE_DB = []
+COURSEWARE_TASKS_DB = []
+
+# Database file paths
+COURSEWARE_FILE = os.path.join(settings.DATA_DIR, "courseware.json")
+COURSEWARE_TASKS_FILE = os.path.join(settings.DATA_DIR, "courseware_tasks.json")
+
+# Load database from file
+def load_courseware_db():
+    """Load courseware database from file"""
+    global COURSEWARE_DB
+    try:
+        if os.path.exists(COURSEWARE_FILE):
+            with open(COURSEWARE_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                COURSEWARE_DB = [CoursewareDB(**item) for item in data]
+        return True
+    except Exception as e:
+        print(f"Error loading courseware database: {e}")
+        return False
+
+def load_courseware_tasks_db():
+    """Load courseware tasks database from file"""
+    global COURSEWARE_TASKS_DB
+    try:
+        if os.path.exists(COURSEWARE_TASKS_FILE):
+            with open(COURSEWARE_TASKS_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                COURSEWARE_TASKS_DB = [CoursewareTaskDB(**item) for item in data]
+        return True
+    except Exception as e:
+        print(f"Error loading courseware tasks database: {e}")
+        return False
+
+# Save database to file
+async def save_courseware_db():
+    """Save courseware database to file"""
+    try:
+        os.makedirs(os.path.dirname(COURSEWARE_FILE), exist_ok=True)
+        with open(COURSEWARE_FILE, 'w', encoding='utf-8') as f:
+            # 使用 dict() 方法，兼容所有版本的 Pydantic
+            data = [item.dict() for item in COURSEWARE_DB]
+            json.dump(data, f, default=str, ensure_ascii=False, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving courseware database: {e}")
+        return False
+
+async def save_courseware_tasks_db():
+    """Save courseware tasks database to file"""
+    try:
+        os.makedirs(os.path.dirname(COURSEWARE_TASKS_FILE), exist_ok=True)
+        with open(COURSEWARE_TASKS_FILE, 'w', encoding='utf-8') as f:
+            data = [item.dict() for item in COURSEWARE_TASKS_DB]
+            json.dump(data, f, default=str, ensure_ascii=False, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving courseware tasks database: {e}")
+        return False
+
+# Load database on module import
+load_courseware_db()
+load_courseware_tasks_db()
+
+# Courseware upload function
+async def upload_courseware(file: UploadFile, name: str) -> str:
+    """Upload a courseware file"""
+    # Generate a unique file ID
+    timestamp = int(datetime.now().timestamp())
+    random_suffix = os.urandom(2).hex()
+    file_id = f"course_{timestamp}_{random_suffix}"
+
+    # Create upload directory if it doesn't exist
+    upload_dir = os.path.join(settings.UPLOAD_DIR, "courseware")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    # Save the file
+    file_path = os.path.join(upload_dir, f"{file_id}_{file.filename}")
+    with open(file_path, "wb") as f:
+        content = await file.read()
+        f.write(content)
+
+    # Add to database
+    courseware = CoursewareDB(
+        file_id=file_id,
+        name=name,
+        original_filename=file.filename,
+        file_path=file_path,
+        created_at=datetime.now().isoformat()
+    )
+    COURSEWARE_DB.append(courseware)
+
+    # Save database
+    await save_courseware_db()
+
+    return file_id
+
+# Extract text from courseware
+async def extract_text(file_id: str) -> CoursewareTextExtraction:
+    """Extract text from a courseware file"""
+    # Find courseware in database
+    courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+    if not courseware:
+        return None
+
+    # Check if file exists
+    if not os.path.exists(courseware.file_path):
+        print(f"File not found: {courseware.file_path}")
+        return None
+
+    # Extract text using the pipeline
+    try:
+        # Get file extension
+        file_ext = Path(courseware.file_path).suffix.lower()
+
+        # Extract text based on file type
+        if file_ext in [".ppt", ".pptx"]:
+            # Use the pipeline to extract text
+            slides = run_pipeline(courseware.file_path)
+
+            # Convert to the expected format
+            text_content = ""
+            slide_contents = []
+
+            for i, slide in enumerate(slides):
+                # Add slide title and content to the combined text
+                slide_text = f"Slide {i+1}: {slide.title}\n{slide.content}\n\n"
+                text_content += slide_text
+
+                # Add to slide contents
+                slide_contents.append(SlideContent(
+                    slide_id=i,
+                    title=slide.title,
+                    content=slide.content,
+                    notes=slide.notes
+                ))
+
+            # Create extraction result
+            result = CoursewareTextExtraction(
+                file_id=file_id,
+                text=text_content,
+                slides=slide_contents
+            )
+
+            return result
+        elif file_ext in [".pdf"]:
+            # For PDF files, use a simpler extraction method
+            # This is a placeholder - implement PDF text extraction
+            return CoursewareTextExtraction(
+                file_id=file_id,
+                text="PDF text extraction not implemented yet",
+                slides=[]
+            )
+        else:
+            print(f"Unsupported file type: {file_ext}")
+            return None
+    except Exception as e:
+        print(f"Error extracting text: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+# Generate voiced courseware
+async def generate_voiced_courseware(
+    background_tasks: BackgroundTasks,
+    file_id: str,
+    voice_id: str,
+    speed: float = 1.0,
+    emotion: str = "neutral",
+    pitch: float = 0.0,
+    energy: float = 1.0,
+    pause_factor: float = 1.0
+) -> str:
+    """Generate voiced courseware"""
+    # Find courseware in database
+    courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+    if not courseware:
+        raise ValueError(f"Courseware not found: {file_id}")
+
+    # Check if file exists
+    if not os.path.exists(courseware.file_path):
+        raise ValueError(f"Courseware file not found: {courseware.file_path}")
+
+    # Generate a unique task ID
+    timestamp = int(datetime.now().timestamp())
+    random_suffix = os.urandom(2).hex()
+    task_id = f"{timestamp}_{random_suffix}"
+
+    # Create task
+    task = CoursewareTaskDB(
+        task_id=task_id,
+        file_id=file_id,
+        name=courseware.name,
+        status="pending",
+        created_at=datetime.now().isoformat(),
+        voice_id=voice_id,
+        speed=speed,
+        emotion=emotion,
+        pitch=pitch,
+        energy=energy,
+        pause_factor=pause_factor
+    )
+    COURSEWARE_TASKS_DB.append(task)
+
+    # Save database
+    await save_courseware_tasks_db()
+
+    # Start processing in background
+    background_tasks.add_task(
+        process_courseware_task,
+        task_id,
+        file_id,
+        voice_id,
+        speed,
+        emotion,
+        pitch,
+        energy,
+        pause_factor
+    )
+
+    return task_id
+
+# Create task
+async def create_task(
+    file_id: str,
+    voice_id: str,
+    speed: float = 1.0,
+    emotion: str = "neutral",
+    pitch: float = 0.0,
+    energy: float = 1.0,
+    pause_factor: float = 1.0
+) -> str:
+    """Create a voiced courseware generation task"""
+    # Find courseware in database
+    courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+    if not courseware:
+        raise ValueError(f"Courseware not found: {file_id}")
+
+    # Generate a unique task ID
+    timestamp = int(datetime.now().timestamp())
+    random_suffix = os.urandom(2).hex()
+    task_id = f"{timestamp}_{random_suffix}"
+
+    # Create task
+    task = CoursewareTaskDB(
+        task_id=task_id,
+        file_id=file_id,
+        name=courseware.name,
+        status="pending",
+        created_at=datetime.now().isoformat(),
+        voice_id=voice_id,
+        speed=speed,
+        emotion=emotion,
+        pitch=pitch,
+        energy=energy,
+        pause_factor=pause_factor
+    )
+    COURSEWARE_TASKS_DB.append(task)
+
+    # Save database
+    await save_courseware_tasks_db()
+
+    return task_id
+
+# Update task
+async def update_task(
+    task_id: str,
+    status: Optional[str] = None,
+    progress: Optional[float] = None,
+    error: Optional[str] = None,
+    file_path: Optional[str] = None,
+    manifest_path: Optional[str] = None,
+    slides_processed: Optional[int] = None,
+    total_duration: Optional[float] = None,
+    output_filename: Optional[str] = None,
+    error_details: Optional[Dict[str, Any]] = None
+) -> bool:
+    """Update a task's status and progress"""
+    # Find task in database
+    task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+    if not task:
+        print(f"Task not found: {task_id}")
+        return False
+
+    # Update task
+    if status:
+        task.status = status
+    if progress is not None:
+        task.progress = progress
+    if error:
+        task.error = error
+    if file_path:
+        task.file_path = file_path
+    if manifest_path:
+        task.manifest_path = manifest_path
+    if slides_processed:
+        task.slides_processed = slides_processed
+    if total_duration:
+        task.total_duration = total_duration
+    if output_filename:
+        task.output_filename = output_filename
+    if error_details:
+        task.error_details = error_details
+
+    # Update completion time if status is completed or failed
+    if status in ["completed", "failed"]:
+        task.completed_at = datetime.now().isoformat()
+
+    # Save database
+    await save_courseware_tasks_db()
+
+    return True
+
+# Get task status
+async def get_task_status(task_id: str) -> CoursewareTaskStatus:
+    """Get a task's status"""
+    # Find task in database
+    task = next((t for t in COURSEWARE_TASKS_DB if t.task_id == task_id), None)
+    if not task:
+        return None
+
+    # Convert to status model
+    status = CoursewareTaskStatus(
+        task_id=task.task_id,
+        file_id=task.file_id,
+        name=task.name,
+        status=task.status,
+        progress=task.progress,
+        created_at=task.created_at,
+        completed_at=task.completed_at,
+        error=task.error if hasattr(task, "error") else None,
+        file_path=task.file_path if hasattr(task, "file_path") else None,
+        manifest_path=task.manifest_path if hasattr(task, "manifest_path") else None,
+        slides_processed=task.slides_processed if hasattr(task, "slides_processed") else None,
+        total_duration=task.total_duration if hasattr(task, "total_duration") else None,
+        output_filename=task.output_filename if hasattr(task, "output_filename") else None,
+        error_details=task.error_details if hasattr(task, "error_details") else None
+    )
+
+    return status
+
+# Get task result
+async def get_task_result(task_id: str) -> CoursewareTaskStatus:
+    """Get a task's result"""
+    # Get task status
+    status = await get_task_status(task_id)
+    if not status:
+        return None
+
+    # Check if task is completed
+    if status.status not in ["completed", "failed"]:
+        print(f"Task not completed: {task_id}, status: {status.status}")
+        return status
+
+    return status
+
+# List all courseware
+async def list_all_courseware() -> List[Dict[str, Any]]:
+    """List all courseware"""
+    return [cw.dict() for cw in COURSEWARE_DB]
+
+# List all tasks
+async def list_all_tasks() -> List[Dict[str, Any]]:
+    """List all tasks"""
+    return [t.dict() for t in COURSEWARE_TASKS_DB]
+
+# Wait for task completion
+async def wait_for_task_completion(task_id: str, timeout: float = 60.0) -> CoursewareTaskStatus:
+    """Wait for a task to complete"""
+    import asyncio
+    start_time = asyncio.get_event_loop().time()
+
+    while True:
+        # Get task status
+        status = await get_task_status(task_id)
+        if not status:
+            return None
+
+        # Check if task is completed
+        if status.status in ["completed", "failed"]:
+            return status
+
+        # Check timeout
+        elapsed = asyncio.get_event_loop().time() - start_time
+        if elapsed > timeout:
+            print(f"Timeout waiting for task completion: {task_id}")
+            return None
+
+        # Wait a bit
+        await asyncio.sleep(1.0)
+
+# Optimize TTS parameters
+async def optimize_tts_params(voice_id: str, text_sample: Optional[str] = None) -> Dict[str, Any]:
+    """Optimize TTS parameters for a specific voice"""
+    # Default parameters
+    params = {
+        "speed": 1.0,
+        "pitch": 0.0,
+        "energy": 1.0,
+        "pause_factor": 1.0
+    }
+
+    # Optimize based on voice ID
+    if "male" in voice_id.lower():
+        # Male voices often sound better with slightly lower pitch
+        params["pitch"] = -2.0
+    elif "female" in voice_id.lower():
+        # Female voices often sound better with slightly higher energy
+        params["energy"] = 1.2
+
+    # Language-specific optimizations
+    if "chinese" in voice_id.lower() or "中文" in voice_id:
+        # Chinese voices often sound better with slightly slower speed
+        params["speed"] = 0.9
+    elif "english" in voice_id.lower() or "英文" in voice_id:
+        # English voices often sound better with slightly faster speed
+        params["speed"] = 1.1
+
+    return params
+
+# Process courseware task
+async def process_courseware_task(
+    task_id: str,
+    file_id: str,
+    voice_id: str,
+    speed: float = 1.0,
+    emotion: str = "neutral",
+    pitch: float = 0.0,
+    energy: float = 1.0,
+    pause_factor: float = 1.0
+):
+    """Process a courseware task"""
+    print(f"Processing courseware task: {task_id}")
+    print(f"File ID: {file_id}")
+    print(f"Voice ID: {voice_id}")
+    print(f"Parameters: speed={speed}, emotion={emotion}, pitch={pitch}, energy={energy}, pause_factor={pause_factor}")
+
+    # Update task status
+    await update_task(task_id, status="processing", progress=0.1)
+
+    try:
+        # Find courseware in database
+        courseware = next((cw for cw in COURSEWARE_DB if cw.file_id == file_id), None)
+        if not courseware:
+            raise ValueError(f"Courseware not found: {file_id}")
+
+        # Extract text
+        print(f"Extracting text from courseware: {courseware.file_path}")
+        extraction_result = await extract_text(file_id)
+        if not extraction_result:
+            raise ValueError(f"Text extraction failed for courseware: {file_id}")
+
+        # Update task status
+        await update_task(task_id, progress=0.2)
+
+        # Check if CosyVoice is available
+        if not COSYVOICE_AVAILABLE:
+            raise ValueError("TTS engine not available")
+
+        # Get CosyVoice model
+        model = get_cosyvoice_model(voice_id)
+        if not model:
+            raise ValueError(f"Voice model not found: {voice_id}")
+
+        # Create output directory for audio files
+        output_dir = os.path.join(settings.UPLOAD_DIR, f"course_task_{task_id}_audio")
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Create manifest file
+        manifest_path = os.path.join(output_dir, "manifest.json")
+        manifest = {
+            "task_id": task_id,
+            "file_id": file_id,
+            "voice_id": voice_id,
+            "slides": []
+        }
+
+        # Process each slide
+        slides_total = len(extraction_result.slides)
+        print(f"Processing {slides_total} slides")
+
+        # TTS tasks for each slide
+        tts_tasks = []
+        total_duration = 0.0
+
+        # Process each slide
+        for i, slide in enumerate(extraction_result.slides):
+            print(f"Processing slide {i+1}/{slides_total}: {slide.title}")
+
+            # Update task status
+            progress = 0.2 + (0.7 * (i / slides_total))
+            await update_task(task_id, progress=progress, slides_processed=i+1)
+
+            # Combine title and content
+            slide_text = ""
+            if slide.title:
+                slide_text += slide.title + "\n"
+            if slide.content:
+                slide_text += slide.content
+
+            # Skip empty slides
+            if not slide_text.strip():
+                print(f"Skipping empty slide {i+1}")
+                continue
+
+            # Split text into chunks
+            chunks = split_text_into_chunks(slide_text)
+            print(f"Split slide {i+1} into {len(chunks)} chunks")
+
+            # Process each chunk
+            chunk_tasks = []
+            for j, chunk in enumerate(chunks):
+                print(f"Processing chunk {j+1}/{len(chunks)} of slide {i+1}")
+
+                try:
+                    # Generate audio file name
+                    audio_file = os.path.join(output_dir, f"slide_{i+1}_chunk_{j+1}.wav")
+
+                    # Synthesize speech
+                    result = await synthesize_speech(
+                        text=chunk,
+                        voice_id=voice_id,
+                        output_path=audio_file,
+                        speed=speed,
+                        emotion=emotion,
+                        pitch=pitch,
+                        energy=energy,
+                        pause_factor=pause_factor
+                    )
+
+                    # Add to chunk tasks
+                    chunk_task = {
+                        "chunk_id": j,
+                        "text": chunk,
+                        "audio_file": audio_file,
+                        "duration": result.get("duration", 0)
+                    }
+                    chunk_tasks.append(chunk_task)
+                    total_duration += result.get("duration", 0)
+
+                    # Add to manifest
+                    manifest["slides"].append({
+                        "slide_id": i,
+                        "chunk_id": j,
+                        "text": chunk,
+                        "audio_file": os.path.basename(audio_file),
+                        "duration": result.get("duration", 0)
+                    })
+
+                except Exception as e:
+                    print(f"Failed to process text chunk: {e}")
+                    import traceback
+                    traceback.print_exc()
+
+            # Save slide task information
+            tts_tasks.append({
+                "slide_id": slide.slide_id,
+                "title": slide.title,
+                "chunks": chunk_tasks,
+                "total_duration": sum(chunk.get("duration", 0) for chunk in chunk_tasks)
+            })
+
+        # Update progress
+        await update_task(task_id, progress=0.9, slides_processed=slides_total)
+
+        # 创建有声课件，将音频嵌入到 PPT 中
+        try:
+            # 导入音频插入模块
+            from app.services.audio_insertion import find_original_ppt, find_audio_files, insert_audio_to_ppt
+
+            # 查找原始 PPT 文件
+            ppt_file = find_original_ppt(courseware.file_id, courseware.original_filename, settings.UPLOAD_DIR)
+            if not ppt_file:
+                print(f"Original PPT file not found for {courseware.file_id}_{courseware.original_filename}")
+                raise FileNotFoundError(f"Cannot find original PPT file for {courseware.file_id}_{courseware.original_filename}")
+
+            # 查找音频文件
+            audio_files = find_audio_files(task_id, settings.UPLOAD_DIR)
+            if not audio_files:
+                print(f"No audio files found for task {task_id}")
+                # 尝试从 tts_tasks 中提取音频文件
+                for slide_task in tts_tasks:
+                    for chunk in slide_task["chunks"]:
+                        if "audio_file" in chunk and os.path.exists(chunk["audio_file"]):
+                            audio_files.append(chunk["audio_file"])
+
+            # 将音频插入到 PPT 中
+            output_dir = os.path.join(settings.UPLOAD_DIR, "voiced_courseware")
+            os.makedirs(output_dir, exist_ok=True)
+
+            result_file = insert_audio_to_ppt(ppt_file, audio_files, output_dir, task_id)
+            if result_file:
+                output_path = result_file
+                print(f"Successfully processed audio insertion: {output_path}")
+            else:
+                print(f"Failed to insert audio to PPT: {ppt_file}")
+                # 创建错误信息
+                error_message = "Failed to insert audio to PPT. Audio files have been generated and can be downloaded separately."
+                await update_task(task_id, error=error_message)
+                # 使用原始 PPT 文件作为输出文件
+                output_path = ppt_file
+
+            # 更新任务状态
+            await update_task(
+                task_id,
+                status="completed",
+                progress=1.0,
+                file_path=output_path,
+                manifest_path=manifest_path,
+                total_duration=total_duration,
+                output_filename=os.path.basename(output_path) if output_path else None
+            )
+
+            # 完成任务
+            print(f"Task {task_id} completed successfully")
+        except Exception as e:
+            # 创建有声课件失败
+            print(f"Failed to create voiced courseware: {e}")
+            import traceback
+            traceback.print_exc()
+
+            # 更新任务状态
+            error_message = f"Failed to create voiced courseware: {e}"
+            await update_task(task_id, status="failed", error=error_message)
+
+        # Save manifest
+        with open(manifest_path, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, ensure_ascii=False, indent=2)
+
+    except Exception as e:
+        print(f"Error processing courseware task: {e}")
+        import traceback
+        traceback.print_exc()
+
+        # Update task status
+        error_message = f"Error processing courseware task: {e}"
+        await update_task(task_id, status="failed", progress=0.0, error=error_message)
+
+# Split text into chunks
+def split_text_into_chunks(text: str, max_length: int = 200) -> List[str]:
+    """Split text into chunks for TTS processing"""
+    # Remove extra whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    # If text is short enough, return as is
+    if len(text) <= max_length:
+        return [text]
+
+    # Split by sentences
+    sentences = re.split(r'(?<=[.!?。！？])\s+', text)
+    chunks = []
+    current_chunk = ""
+
+    for sentence in sentences:
+        # If sentence is too long, split by commas
+        if len(sentence) > max_length:
+            comma_parts = re.split(r'(?<=[,，])\s*', sentence)
+            for part in comma_parts:
+                if len(current_chunk) + len(part) <= max_length:
+                    current_chunk += part + " "
+                else:
+                    if current_chunk:
+                        chunks.append(current_chunk.strip())
+                    current_chunk = part + " "
+        else:
+            # If adding this sentence would make the chunk too long, start a new chunk
+            if len(current_chunk) + len(sentence) <= max_length:
+                current_chunk += sentence + " "
+            else:
+                if current_chunk:
+                    chunks.append(current_chunk.strip())
+                current_chunk = sentence + " "
+
+    # Add the last chunk if it's not empty
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+
+    return chunks

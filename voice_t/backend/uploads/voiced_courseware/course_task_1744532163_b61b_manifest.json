@@ -1,0 +1,292 @@
+{
+  "task_id": "1744532163_b61b",
+  "courseware": {
+    "file_id": "course_1744532134_0f2f",
+    "name": "test001",
+    "original_filename": "test001.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_1744532134_0f2f_test001.pptx",
+  "total_duration": 333.97260770975066,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "情绪调节与卡通设计 同学们，今天我们将探讨如何调节情绪，并欣赏一些有趣的卡通设计。 首先，我们要了解情绪的基本概念及其重要性。 接下来，我们将介绍几种有效的情绪调节方法。 最后，我们来看看如何在生活中应用这些方法。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 10.832108843537416
+    },
+    {
+      "slide_id": 1,
+      "title": "情绪调节与卡通设计\n\n同学们，今天我们将探讨如何调节情绪，并欣赏一些有趣的卡通设计。\n\n首先，我们要...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_1_chunk_1.wav",
+          "duration": 10.832108843537416
+        }
+      ],
+      "total_duration": 10.832108843537416
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "情绪是我们日常生活中不可或缺的一部分，它影响着我们的思维、行为和人际关系。 掌握情绪调节技巧可以帮助我们在面对压力和挑战时保持冷静和理智。",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 13.293424036281179
+    },
+    {
+      "slide_id": 2,
+      "title": "情绪是我们日常生活中不可或缺的一部分，它影响着我们的思维、行为和人际关系。\n\n掌握情绪调节技巧可以帮...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_2_chunk_1.wav",
+          "duration": 13.293424036281179
+        }
+      ],
+      "total_duration": 13.293424036281179
+    },
+    {
+      "slide_id": 2,
+      "chunk_id": 0,
+      "text": "情绪调节不仅是一种技能，也是一种态度。 我们需要认识到，每个人都有情绪波动，关键在于我们如何应对。",
+      "audio_file": "slide_3_chunk_1.wav",
+      "duration": 8.068934240362811
+    },
+    {
+      "slide_id": 3,
+      "title": "情绪调节不仅是一种技能，也是一种态度。\n\n我们需要认识到，每个人都有情绪波动，关键在于我们如何应对。",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_3_chunk_1.wav",
+          "duration": 8.068934240362811
+        }
+      ],
+      "total_duration": 8.068934240362811
+    },
+    {
+      "slide_id": 3,
+      "chunk_id": 0,
+      "text": "青少年时期是情绪发展的关键阶段，他们面临着学业、社交和个人成长的压力。 因此，对他们来说，学会情绪管理尤为重要。",
+      "audio_file": "slide_4_chunk_1.wav",
+      "duration": 10.054240362811791
+    },
+    {
+      "slide_id": 4,
+      "title": "青少年时期是情绪发展的关键阶段，他们面临着学业、社交和个人成长的压力。\n\n因此，对他们来说，学会情绪...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_4_chunk_1.wav",
+          "duration": 10.054240362811791
+        }
+      ],
+      "total_duration": 10.054240362811791
+    },
+    {
+      "slide_id": 4,
+      "chunk_id": 0,
+      "text": "那么，我们应该如何具体地调节情绪呢？ 我们可以采取一些策略，比如哭泣、倾诉、抱怨或者听音乐唱歌。",
+      "audio_file": "slide_5_chunk_1.wav",
+      "duration": 9.009342403628118
+    },
+    {
+      "slide_id": 5,
+      "title": "那么，我们应该如何具体地调节情绪呢？\n\n我们可以采取一些策略，比如哭泣、倾诉、抱怨或者听音乐唱歌。",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_5_chunk_1.wav",
+          "duration": 9.009342403628118
+        }
+      ],
+      "total_duration": 9.009342403628118
+    },
+    {
+      "slide_id": 5,
+      "chunk_id": 0,
+      "text": "我们要成为一个积极乐观向上的人，就需要学会调控自己的不良情绪，并通过调整心态来控制情绪。 刚才我们了解了情绪是可以被调节的，那么我们应该如何克服不良情绪，保持良好的情绪状态呢？",
+      "audio_file": "slide_6_chunk_1.wav",
+      "duration": 14.651791383219955
+    },
+    {
+      "slide_id": 6,
+      "title": "我们要成为一个积极乐观向上的人，就需要学会调控自己的不良情绪，并通过调整心态来控制情绪。\n刚才我们了...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_6_chunk_1.wav",
+          "duration": 14.651791383219955
+        }
+      ],
+      "total_duration": 14.651791383219955
+    },
+    {
+      "slide_id": 6,
+      "chunk_id": 0,
+      "text": "转移注意力是一种有效的方法，当我们感到情绪不佳时，可以通过转移话题或做一些有趣的事情来分散注意力，从而减轻负面情绪的影响。",
+      "audio_file": "slide_7_chunk_1.wav",
+      "duration": 11.853786848072563
+    },
+    {
+      "slide_id": 7,
+      "title": "转移注意力是一种有效的方法，当我们感到情绪不佳时，可以通过转移话题或做一些有趣的事情来分散注意力，从...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_7_chunk_1.wav",
+          "duration": 11.853786848072563
+        }
+      ],
+      "total_duration": 11.853786848072563
+    },
+    {
+      "slide_id": 7,
+      "chunk_id": 0,
+      "text": "合理发泄情绪也是一种重要的方法。例如，在适当的情况下哭泣、向他人倾诉、进行剧烈运动或是大声歌唱都可以帮助我们释放内心的压抑感。",
+      "audio_file": "slide_8_chunk_1.wav",
+      "duration": 11.656417233560092
+    },
+    {
+      "slide_id": 8,
+      "title": "合理发泄情绪也是一种重要的方法。例如，在适当的情况下哭泣、向他人倾诉、进行剧烈运动或是大声歌唱都可以...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_8_chunk_1.wav",
+          "duration": 11.656417233560092
+        }
+      ],
+      "total_duration": 11.656417233560092
+    },
+    {
+      "slide_id": 8,
+      "chunk_id": 0,
+      "text": "在这张图片中，我们可以看到一个卡通风格的小男孩，他的表情看起来有些悲伤或困惑，脸颊上有几滴泪水。背景是纯白色，没有其他元素。 接下来是一张充满欢乐的场景，有三个卡通人物在跳舞和唱歌，背景中有彩色的心形图案和音符，营造出一种愉快和活泼的氛围。",
+      "audio_file": "slide_9_chunk_1.wav",
+      "duration": 12.294965986394558
+    },
+    {
+      "slide_id": 8,
+      "chunk_id": 1,
+      "text": "左边的小男孩穿着绿色的衣服，手里拿着一个黄色的吉他形状的物体；中间的小女孩戴着兔耳朵发饰，穿着蓝色的连衣裙，手里拿着一个麦克风；右边的小女孩扎着两个小辫子，穿着粉色的衣服，手里也拿着一个黄色的吉他形状的物体。 背景中有许多彩色的心形图案和音符，颜色包括红色、橙色、黄色、蓝色和紫色，还有一个小蜜蜂图案位于左上角。 图片中的音乐符号表示不同的音乐节奏和旋律。",
+      "audio_file": "slide_9_chunk_2.wav",
+      "duration": 11.77251700680272
+    },
+    {
+      "slide_id": 8,
+      "chunk_id": 2,
+      "text": "整体来看，这幅图传达了一种快乐和无忧无虑的感觉，适合用于表达儿童节、生日派对或其他庆祝活动的主题。",
+      "audio_file": "slide_9_chunk_3.wav",
+      "duration": 9.671111111111111
+    },
+    {
+      "slide_id": 9,
+      "title": "在这张图片中，我们可以看到一个卡通风格的小男孩，他的表情看起来有些悲伤或困惑，脸颊上有几滴泪水。背景...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_9_chunk_1.wav",
+          "duration": 12.294965986394558
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_9_chunk_2.wav",
+          "duration": 11.77251700680272
+        },
+        {
+          "chunk_id": 2,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_9_chunk_3.wav",
+          "duration": 9.671111111111111
+        }
+      ],
+      "total_duration": 33.73859410430839
+    },
+    {
+      "slide_id": 9,
+      "chunk_id": 0,
+      "text": "欣赏这首诗《假如生活欺骗了你》，它告诉我们即使生活中遇到了困难和挫折，也不应该过于忧郁或愤怒，而是要暂时忍耐，相信美好的日子终会来临。 ——普希金",
+      "audio_file": "slide_10_chunk_1.wav",
+      "duration": 13.119274376417234
+    },
+    {
+      "slide_id": 10,
+      "title": "欣赏这首诗《假如生活欺骗了你》，它告诉我们即使生活中遇到了困难和挫折，也不应该过于忧郁或愤怒，而是要...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_10_chunk_1.wav",
+          "duration": 13.119274376417234
+        }
+      ],
+      "total_duration": 13.119274376417234
+    },
+    {
+      "slide_id": 10,
+      "chunk_id": 0,
+      "text": "本节主要讲述了情绪与个人态度的关系。 生活中，我们可以通过改变态度来控制情绪。 因此，情绪是可以被调节的。",
+      "audio_file": "slide_11_chunk_1.wav",
+      "duration": 8.614603174603175
+    },
+    {
+      "slide_id": 11,
+      "title": "本节主要讲述了情绪与个人态度的关系。\n生活中，我们可以通过改变态度来控制情绪。\n因此，情绪是可以被调...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_11_chunk_1.wav",
+          "duration": 8.614603174603175
+        }
+      ],
+      "total_duration": 8.614603174603175
+    },
+    {
+      "slide_id": 11,
+      "chunk_id": 0,
+      "text": "接下来，我们来看一组关于快乐的寄语。 快乐是一种选择，无论遇到什么情况，我们都应该选择快乐。",
+      "audio_file": "slide_12_chunk_1.wav",
+      "duration": 7.894784580498866
+    },
+    {
+      "slide_id": 12,
+      "title": "接下来，我们来看一组关于快乐的寄语。\n快乐是一种选择，无论遇到什么情况，我们都应该选择快乐。",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_12_chunk_1.wav",
+          "duration": 7.894784580498866
+        }
+      ],
+      "total_duration": 7.894784580498866
+    },
+    {
+      "slide_id": 12,
+      "chunk_id": 0,
+      "text": "最后，让我们以一幅充满童趣的画面作为结束。 希望每个人都能像画中的孩子们一样，每天都充满快乐。 今天的课程到此结束，希望大家能带着这份快乐的心情继续前行。",
+      "audio_file": "slide_13_chunk_1.wav",
+      "duration": 14.199002267573697
+    },
+    {
+      "slide_id": 13,
+      "title": "最后，让我们以一幅充满童趣的画面作为结束。\n希望每个人都能像画中的孩子们一样，每天都充满快乐。\n今天...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744532163_b61b_audio\\slide_13_chunk_1.wav",
+          "duration": 14.199002267573697
+        }
+      ],
+      "total_duration": 14.199002267573697
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 2163
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "task_id": "1744529357_c8e6",
+  "courseware": {
+    "file_id": "course_1744529354_7f65",
+    "name": "text005",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_1744529354_7f65_text1.pptx",
+  "total_duration": 113.19727891156462,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "中国古典文学欣赏 同学们，今天我们一起来领略中国古代文学的魅力，特别是从一首著名的古诗开始。 这张图片展示了唐代诗人王维的一首著名古诗《相思》。 诗歌描述了红豆生长在南方的情景，并表达了诗人对红豆的喜爱以及红豆象征思念的情感。 背景是浅蓝色的天空和白云，给人一种宁静的感觉。左上角有红色的果实（可能是红豆）挂在树枝上，右下角也有类似的红色果实和绿叶。中间部分有一些模糊的花朵图案，颜色为淡粉色和黄色。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 13.374693877551021
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 1,
+      "text": "图片顶部有几个彩色的问号，可能表示对这首诗的好奇或思考。整体设计风格简洁而富有童趣，适合儿童学习使用。",
+      "audio_file": "slide_1_chunk_2.wav",
+      "duration": 11.633197278911565
+    },
+    {
+      "slide_id": 1,
+      "title": "中国古典文学欣赏\n\n同学们，今天我们一起来领略中国古代文学的魅力，特别是从一首著名的古诗开始。\n\n这...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744529357_c8e6_audio\\slide_1_chunk_1.wav",
+          "duration": 13.374693877551021
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744529357_c8e6_audio\\slide_1_chunk_2.wav",
+          "duration": 11.633197278911565
+        }
+      ],
+      "total_duration": 25.007891156462584
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "接下来我们介绍一位伟大的历史人物——诸葛亮。 诸葛亮是三国时期的政治家和文学家，字孔明，来自山东沂水县南的一个官宦家庭。他在刘备三顾茅庐后出山，帮助刘备建立了蜀汉政权。 诸葛亮的主要成就是他的军事才能和政治智慧，尤其是在赤壁之战中打败曹操，后来又占领荆州和益州，形成了魏、蜀、吴三分天下的局面。 他还曾南征平定少数民族地区，多次北伐曹魏，但最终因兵少势单，未能成功，最后病逝于军中。",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 17.252426303854875
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 1,
+      "text": "诸葛亮的文学成就主要体现在散文方面，其中《出师表》是他最为著名的代表作之一。 今天的课程到此结束，希望大家对中国古典文学有了更深的理解和兴趣。 希望同学们能够继续深入学习中国古典文学，感受其中的文化魅力。",
+      "audio_file": "slide_2_chunk_2.wav",
+      "duration": 14.338321995464852
+    },
+    {
+      "slide_id": 2,
+      "title": "接下来我们介绍一位伟大的历史人物——诸葛亮。\n\n诸葛亮是三国时期的政治家和文学家，字孔明，来自山东沂...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744529357_c8e6_audio\\slide_2_chunk_1.wav",
+          "duration": 17.252426303854875
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744529357_c8e6_audio\\slide_2_chunk_2.wav",
+          "duration": 14.338321995464852
+        }
+      ],
+      "total_duration": 31.590748299319728
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 9357
+  }
+}

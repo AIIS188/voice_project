@@ -1,0 +1,88 @@
+{
+  "task_id": "1744542308_4a74",
+  "courseware": {
+    "file_id": "course_1744542301_6ba5",
+    "name": "test004",
+    "original_filename": "text2.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744542308_4a74_voiced_course_1744542301_6ba5.pptx",
+  "total_duration": 122.62458049886621,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "诸葛亮的历史与文学成就 同学们，今天我们将一起了解三国时期著名的政治家和文学家——诸葛亮。 首先，我们来看一下诸葛亮的生平介绍。 诸葛亮（181—234），三国时的政治家和文学家，字孔明，来自山东沂水县南的一个官宦家庭。他年轻时就展现出了非凡的才华和远大的抱负，常常把自己比作古代的管仲和乐毅。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 10.530249433106576
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 1,
+      "text": "在刘备三次拜访他的茅庐之后，诸葛亮决定跟随刘备，并在刘备联合孙权的过程中发挥了关键作用，最终帮助刘备在赤壁之战中取得了胜利。此后，诸葛亮辅佐刘备占领了荆州，并攻取了益州，建立了魏、蜀、吴三国鼎立的局面。 刘备称帝后，任命诸葛亮为丞相，从此蜀汉的所有事务都由诸葛亮负责。他不仅在军事上取得了显著的成绩，还进行了多次北伐，虽然最终因为兵力不足而未能成功，但他的智慧和勇气令人敬佩。",
+      "audio_file": "slide_1_chunk_2.wav",
+      "duration": 12.294965986394558
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 2,
+      "text": "诸葛亮的文学成就主要体现在散文方面，其中最著名的作品包括《出师表》和《后出师表》，这些文章展现了他卓越的文采和深邃的思想。 接下来，让我们回顾一下诸葛亮的主要贡献。 诸葛亮在军事上的杰出表现使他成为了蜀汉的重要支柱。他在刘备称帝后被封为丞相，负责所有国家大事。诸葛亮不仅在军事上取得了辉煌的战绩，还在治理国家方面表现出色，使得蜀汉成为一个稳定繁荣的政权。",
+      "audio_file": "slide_1_chunk_3.wav",
+      "duration": 12.538775510204081
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 3,
+      "text": "此外，诸葛亮的文学成就也备受推崇。他的散文作品如《出师表》和《后出师表》不仅是文学史上的经典之作，更是后人研究三国历史的重要资料。 最后，我们来谈谈诸葛亮的精神品质。 诸葛亮的一生充满了智慧、忠诚和牺牲精神。他不仅在战场上英勇善战，而且在日常生活中也非常注重道德修养。他的忠诚和无私奉献精神激励了一代又一代的人。",
+      "audio_file": "slide_1_chunk_4.wav",
+      "duration": 12.689705215419501
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 4,
+      "text": "诸葛亮的故事告诉我们，一个人的成功不仅仅取决于天赋和机遇，更在于自身的努力和坚持。我们应该向诸葛亮学习，做一个有理想、有担当的人。 今天的课程到此结束，希望大家能够从诸葛亮的故事中汲取力量，继续努力学习。",
+      "audio_file": "slide_1_chunk_5.wav",
+      "duration": 13.25859410430839
+    },
+    {
+      "slide_id": 1,
+      "title": "诸葛亮的历史与文学成就\n\n同学们，今天我们将一起了解三国时期著名的政治家和文学家——诸葛亮。\n\n首先...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744542308_4a74_audio\\slide_1_chunk_1.wav",
+          "duration": 10.530249433106576
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744542308_4a74_audio\\slide_1_chunk_2.wav",
+          "duration": 12.294965986394558
+        },
+        {
+          "chunk_id": 2,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744542308_4a74_audio\\slide_1_chunk_3.wav",
+          "duration": 12.538775510204081
+        },
+        {
+          "chunk_id": 3,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744542308_4a74_audio\\slide_1_chunk_4.wav",
+          "duration": 12.689705215419501
+        },
+        {
+          "chunk_id": 4,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744542308_4a74_audio\\slide_1_chunk_5.wav",
+          "duration": 13.25859410430839
+        }
+      ],
+      "total_duration": 61.312290249433104
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 2308
+  }
+}

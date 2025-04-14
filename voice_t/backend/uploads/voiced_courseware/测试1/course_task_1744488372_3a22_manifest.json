@@ -1,0 +1,39 @@
+{
+  "task_id": "1744488372_3a22",
+  "courseware": {
+    "file_id": "course_1744478189_9a28",
+    "name": "text001",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_1744478189_9a28_text1.pptx",
+  "total_duration": 0.0,
+  "slides": [
+    {
+      "slide_id": 1,
+      "title": "```json\n{\n  \"# 讲案标题\": \"探索古代文学之美：王维《相思》赏析\",\n  \"## 开...",
+      "chunks": [],
+      "total_duration": 0
+    },
+    {
+      "slide_id": 2,
+      "title": "```json\n{\n  \"# 讲案标题\": \"探索三国时期的智慧之光——诸葛亮\",\n  \"## 开场...",
+      "chunks": [],
+      "total_duration": 0
+    },
+    {
+      "slide_id": 3,
+      "title": "```json\n{\n  \"# 讲案标题\": \"中国古典文学的学习之旅\",\n  \"## 开场白\": \"...",
+      "chunks": [],
+      "total_duration": 0
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 8372
+  }
+}

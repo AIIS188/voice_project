@@ -1,0 +1,21 @@
+{
+  "appId": "com.voice-teaching-assistant",
+  "productName": "Voice Teaching Assistant",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "src/electron/**/*"
+  ],
+  "mac": {
+    "category": "public.app-category.education"
+  },
+  "win": {
+    "target": "nsis"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Education"
+  }
+} 

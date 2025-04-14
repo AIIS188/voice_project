@@ -1,0 +1,246 @@
+{
+  "task_id": "1744489259_216f",
+  "courseware": {
+    "file_id": "course_1744478189_9a28",
+    "name": "text001",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\1744489259_216f_audio_files.zip",
+  "total_duration": 463.21487528344676,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "```json { \"# 讲案标题\": \"唐诗之美——《相思》赏析\", \"## 开场白\": \"同学们， 大家好！今天我们将一起走进中国古典文学的世界， 欣赏一首流传千古的名篇——唐代诗人王维的《相思》。\", \"## 幻灯片 1\": { \"讲解\": \"首先， 我们来看一下这幅美丽的插图。它以浅蓝色的天空和洁白的云朵作为背景， 给人一种宁静祥和的感觉。画面中央是一颗红豆树，",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 14.291882086167801
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 1,
+      "text": "树枝上挂满了鲜红的果实和翠绿的叶子， 周围点缀着淡粉色和黄色的小花， 整个画面色彩鲜艳， 充满了生机与活力。\\n\\n接下来， 让我们聚焦于这首诗本身。《相思》是唐代诗人王维创作的一首五言绝句， 全诗如下：\\n红豆生南国， 春来发几枝。\\n愿君多采撷， 此物最相思。\\n\\n这首诗描绘了一棵生长在南方的红豆树， 在春天里抽出新芽， 象征着爱情的萌芽与发展。诗人通过对红豆这一意象的描写，",
+      "audio_file": "slide_1_chunk_2.wav",
+      "duration": 15.255510204081633
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 2,
+      "text": "巧妙地传达出了他对远方亲人的深深思念之情。\\n\\n在这首诗中， 诗人运用了借物抒情的手法， 将自己对亲人的思念寄托于红豆之上， 使得情感表达更加含蓄而深远。此外， 他还巧妙地运用了对比手法， 将红豆与春天联系在一起， 进一步增强了诗歌的艺术感染力。\", \"互动环节\": [ \"请大家齐声朗诵这首诗， 感受其中蕴含的情感。\", \"小组讨论：你觉得诗人为什么选择红豆作为表达思念的意象？\" ],",
+      "audio_file": "slide_1_chunk_3.wav",
+      "duration": 16.439727891156462
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 3,
+      "text": "\"重点总结\": [ \"《相思》的诗意：通过描写红豆生长在南方的情景， 表达了对远方亲人深深的思念之情。\", \"诗歌的艺术表现手法：借物抒情、对比\" ] }, \"## 幻灯片 2\": { \"讲解\": \"现在， 让我们再仔细观察一下这幅插图。你会发现， 虽然画面简洁， 但却充满了童趣和美感。这种风格非常适合儿童学习使用， 因为它既不复杂也不晦涩，",
+      "audio_file": "slide_1_chunk_4.wav",
+      "duration": 13.839092970521541
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 4,
+      "text": "能够让孩子们轻松地理解和欣赏到诗歌的魅力。\\n\\n此外， 《相思》不仅是一首优美的诗歌， 更是一部反映古人生活情趣的作品。它告诉我们， 在那个时代， 人们如何用简单的语言和事物来表达内心深处的情感。这也正是中国古代文学之所以能流传至今的原因之一——它们蕴含着深厚的文化底蕴和人文精神。\", \"互动环节\": [], \"重点总结\": [] }, \"## 幻灯片 3\": { \"讲解\": \"最后，",
+      "audio_file": "slide_1_chunk_5.wav",
+      "duration": 16.950566893424035
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 5,
+      "text": "我想问大家一个问题：在生活中， 你们有没有遇到过类似的情况， 即想要向远方的朋友或家人表达自己的感情？如果有的话， 你会怎么去做呢？\\n\\n希望大家能够在课后思考这个问题， 并尝试用自己的方式去传递爱与关怀。\", \"互动环节\": [], \"重点总结\": [], \"结束语\": \"今天的课程就到这里结束了。感谢大家的参与和支持，",
+      "audio_file": "slide_1_chunk_6.wav",
+      "duration": 11.749297052154194
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 6,
+      "text": "希望你们能在今后的日子里继续探索更多关于中国古典文学的知识。再见！\" } } ``` 接下来， 我们将学习\"接下来我们介绍一位伟大的历史人物——诸葛亮。\"。",
+      "audio_file": "slide_1_chunk_7.wav",
+      "duration": 13.316643990929705
+    },
+    {
+      "slide_id": 1,
+      "title": "```json\n{\n  \"# 讲案标题\": \"唐诗之美——《相思》赏析\",\n  \"## 开场白\": ...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_1.wav",
+          "duration": 14.291882086167801
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_2.wav",
+          "duration": 15.255510204081633
+        },
+        {
+          "chunk_id": 2,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_3.wav",
+          "duration": 16.439727891156462
+        },
+        {
+          "chunk_id": 3,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_4.wav",
+          "duration": 13.839092970521541
+        },
+        {
+          "chunk_id": 4,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_5.wav",
+          "duration": 16.950566893424035
+        },
+        {
+          "chunk_id": 5,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_6.wav",
+          "duration": 11.749297052154194
+        },
+        {
+          "chunk_id": 6,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_1_chunk_7.wav",
+          "duration": 13.316643990929705
+        }
+      ],
+      "total_duration": 101.84272108843537
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "```json { \"# 讲案标题\": \"探索三国智慧：诸葛亮的军事与文学魅力\", \"## 开场白\": \"同学们， 今天我们走进三国时代， 去认识一位传奇人物——诸葛亮。他是三国时期的杰出政治家和文学家， 今天我们将一起探讨他的辉煌事迹。\", \"## 幻灯片 1\": { \"讲解\": \"首先， 让我们了解一下诸葛亮的基本情况。诸葛亮， 字孔明， 虽然出生地不在山东，",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 13.049614512471654
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 1,
+      "text": "但他在中国历史上留下了浓墨重彩的一笔。他以卓越的才能和远大的抱负著称于世。\\n诸葛亮不仅在军事上有着非凡的成就， 他还是一位出色的文学家。他在散文方面的作品尤其令人瞩目， 《出师表》便是其中最著名的篇章之一。\\n《前出师表》不仅是诸葛亮个人情感的抒发， 也是他对国家大事深刻见解的体现。在这篇文章中， 诸葛亮强调了忠诚、公正和贤能的重要性， 这些理念至今仍具有深远的影响。\",",
+      "audio_file": "slide_2_chunk_2.wav",
+      "duration": 12.99156462585034
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 2,
+      "text": "\"互动环节\": [\"请大家阅读《前出师表》的部分内容\", \"分享自己对诸葛亮的认识\"], \"重点总结\": [\"诸葛亮的历史地位\", \"《前出师表》的内容要点\"] }, \"## 幻灯片 2\": { \"讲解\": \"接下来， 我们来回顾一下诸葛亮在军事上的伟大贡献。他参与并指挥了许多关键战役， 比如著名的赤壁之战。这场战役不仅改变了三国鼎立的局面， 也为后来的统一奠定了基础。\\n此外，",
+      "audio_file": "slide_2_chunk_3.wav",
+      "duration": 19.736961451247165
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 3,
+      "text": "诸葛亮还成功占领了荆州和益州， 并多次发起北伐， 试图收复中原地区。他的军事策略和领导能力， 在当时乃至今天的战争史上都堪称典范。\", \"互动环节\": [], \"重点总结\": [] }, \"## 幻灯片 3\": { \"讲解\": \"最后， 让我们谈谈诸葛亮的文学成就。除了《出师表》， 他还创作了其他许多优秀的作品， 展现了其深厚的文学功底。\\n《出师表》作为一篇重要的历史文献，",
+      "audio_file": "slide_2_chunk_4.wav",
+      "duration": 11.679637188208616
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 4,
+      "text": "不仅记录了诸葛亮的心路历程， 也成为了后人学习和借鉴的经典之作。通过这篇文稿， 我们可以感受到诸葛亮对国家的责任感和使命感。\", \"互动环节\": [], \"重点总结\": [], \"结束语\": \"通过今天的讲解， 我们了解到了诸葛亮这位历史伟人的多面性。无论是军事上的战略眼光， 还是文学上的深厚造诣， 他都是一个值得我们尊敬和学习的人物。希望大家在今后的学习生活中， 也能像诸葛亮一样，",
+      "audio_file": "slide_2_chunk_5.wav",
+      "duration": 10.971428571428572
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 5,
+      "text": "保持一颗忠诚、公正和贤能的心。\" } } ``` 接下来， 我们将学习\"今天的课程就到这里， 希望大家能够从这些经典的诗词和历史人物中汲取智慧和灵感。\"。",
+      "audio_file": "slide_2_chunk_6.wav",
+      "duration": 14.013242630385488
+    },
+    {
+      "slide_id": 2,
+      "title": "```json\n{\n  \"# 讲案标题\": \"探索三国智慧：诸葛亮的军事与文学魅力\",\n  \"## ...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_2_chunk_1.wav",
+          "duration": 13.049614512471654
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_2_chunk_2.wav",
+          "duration": 12.99156462585034
+        },
+        {
+          "chunk_id": 2,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_2_chunk_3.wav",
+          "duration": 19.736961451247165
+        },
+        {
+          "chunk_id": 3,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_2_chunk_4.wav",
+          "duration": 11.679637188208616
+        },
+        {
+          "chunk_id": 4,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_2_chunk_5.wav",
+          "duration": 10.971428571428572
+        },
+        {
+          "chunk_id": 5,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_2_chunk_6.wav",
+          "duration": 14.013242630385488
+        }
+      ],
+      "total_duration": 82.44244897959184
+    },
+    {
+      "slide_id": 2,
+      "chunk_id": 0,
+      "text": "```json { \"# 讲案标题\": \"经典诗词与历史人物：汲取智慧与灵感\", \"## 开场白\": \"同学们， 今天我们结束了关于中国古典文学的学习之旅。在这节课中， 我们一起领略了众多经典诗词的魅力， 并深入了解了一些杰出的历史人物的故事。\", \"## 幻灯片 1\": { \"讲解\": \"首先， 我们探讨了几首著名的古诗， 比如李白的《静夜思》和杜甫的《登高》，",
+      "audio_file": "slide_3_chunk_1.wav",
+      "duration": 11.633197278911565
+    },
+    {
+      "slide_id": 2,
+      "chunk_id": 1,
+      "text": "它们不仅展现了诗人卓越的艺术才华， 更传递了深刻的人生哲理。\\n接着， 我们介绍了孔子、孟子等儒家思想家， 他们的学说影响深远， 至今仍对我们有着重要的启示意义。\\n最后， 我们欣赏了苏轼的词作， 感受他豁达乐观的人生态度。\", \"互动环节\": [\"你觉得哪位历史人物对你启发最大？为什么？\", \"分享一首你喜欢的经典诗词并谈谈它的含义\"], \"重点总结\": [\"经典诗词中的艺术魅力\",",
+      "audio_file": "slide_3_chunk_2.wav",
+      "duration": 13.711383219954648
+    },
+    {
+      "slide_id": 2,
+      "chunk_id": 2,
+      "text": "\"历史人物的影响与启示\"] }, \"## 幻灯片 2\": { \"讲解\": \"通过这次学习， 我们不仅提升了对中国古典文学的理解， 还增强了文化素养和审美能力。希望你们在今后的学习生活中， 继续探索更多优秀的传统文化。\", \"互动环节\": [\"自由提问交流\", \"分享学习心得\"], \"重点总结\": [] }, \"## 幻灯片 3\": { \"讲解\": \"\", \"互动环节\": [],",
+      "audio_file": "slide_3_chunk_3.wav",
+      "duration": 11.679637188208616
+    },
+    {
+      "slide_id": 2,
+      "chunk_id": 3,
+      "text": "\"重点总结\": [], \"结束语\": \"今天的课程就到这里， 希望大家能够从这些经典的诗词和历史人物中汲取智慧和灵感。期待下次课程再见！\" } } ```",
+      "audio_file": "slide_3_chunk_4.wav",
+      "duration": 10.298049886621316
+    },
+    {
+      "slide_id": 3,
+      "title": "```json\n{\n  \"# 讲案标题\": \"经典诗词与历史人物：汲取智慧与灵感\",\n  \"## 开...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_3_chunk_1.wav",
+          "duration": 11.633197278911565
+        },
+        {
+          "chunk_id": 1,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_3_chunk_2.wav",
+          "duration": 13.711383219954648
+        },
+        {
+          "chunk_id": 2,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_3_chunk_3.wav",
+          "duration": 11.679637188208616
+        },
+        {
+          "chunk_id": 3,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744489259_216f_audio\\slide_3_chunk_4.wav",
+          "duration": 10.298049886621316
+        }
+      ],
+      "total_duration": 47.322267573696145
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 9259
+  }
+}

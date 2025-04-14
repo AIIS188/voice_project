@@ -1,0 +1,97 @@
+{
+  "task_id": "1744521738_88f9",
+  "courseware": {
+    "file_id": "course_1744521733_49e5",
+    "name": "text002",
+    "original_filename": "text1.pptx"
+  },
+  "output_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\1744521738_88f9_audio_files.zip",
+  "total_duration": 117.33043083900226,
+  "slides": [
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "中国古典文学欣赏 同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 8.115374149659864
+    },
+    {
+      "slide_id": 1,
+      "title": "中国古典文学欣赏\n\n同学们，今天我们一起来领略中国古代文学的魅力，感受经典诗词的独特韵味。",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744521738_88f9_audio\\slide_1_chunk_1.wav",
+          "duration": 8.115374149659864
+        }
+      ],
+      "total_duration": 8.115374149659864
+    },
+    {
+      "slide_id": 0,
+      "chunk_id": 0,
+      "text": "首先我们来看一首著名的古诗——王维的《相思》。 这首诗描绘了春天到来时红豆生长的情景，表达了诗人对远方亲人深深的思念之情。通过这首诗的学习，我们可以了解到古代文学中的情感表达方式以及如何通过自然景象寄托情感。 接下来，让我们一起欣赏这首诗的配图，感受其中的意境和美感。",
+      "audio_file": "slide_1_chunk_1.wav",
+      "duration": 20.97922902494331
+    },
+    {
+      "slide_id": 1,
+      "title": "首先我们来看一首著名的古诗——王维的《相思》。\n\n这首诗描绘了春天到来时红豆生长的情景，表达了诗人对...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744521738_88f9_audio\\slide_1_chunk_1.wav",
+          "duration": 20.97922902494331
+        }
+      ],
+      "total_duration": 20.97922902494331
+    },
+    {
+      "slide_id": 1,
+      "chunk_id": 0,
+      "text": "现在我们转向另一位伟大的文学家——诸葛亮。 诸葛亮不仅是三国时期的政治家和军事家，还是一位杰出的文学家。他的文章以其深邃的思想和卓越的文笔闻名。 接下来，我们将一起阅读诸葛亮的一篇文章片段，体会其中的历史感和个人魅力。",
+      "audio_file": "slide_2_chunk_1.wav",
+      "duration": 15.058140589569161
+    },
+    {
+      "slide_id": 2,
+      "title": "现在我们转向另一位伟大的文学家——诸葛亮。\n\n诸葛亮不仅是三国时期的政治家和军事家，还是一位杰出的文...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744521738_88f9_audio\\slide_2_chunk_1.wav",
+          "duration": 15.058140589569161
+        }
+      ],
+      "total_duration": 15.058140589569161
+    },
+    {
+      "slide_id": 2,
+      "chunk_id": 0,
+      "text": "今天的课程就到这里，希望大家能够从这些经典的文学作品中学到更多关于古代文化的知识。 最后，我想提醒大家，学习不仅仅是课堂上的知识积累，更是一种生活态度和思维方式的培养。希望你们能够在日常生活中多多接触和品味优秀的文学作品，提升自己的文化素养。 希望通过今天的课程，大家对中国古典文学有了更深的理解和感悟。期待下次课程再见！",
+      "audio_file": "slide_3_chunk_1.wav",
+      "duration": 14.512471655328799
+    },
+    {
+      "slide_id": 3,
+      "title": "今天的课程就到这里，希望大家能够从这些经典的文学作品中学到更多关于古代文化的知识。\n\n最后，我想提醒...",
+      "chunks": [
+        {
+          "chunk_id": 0,
+          "audio_file": "D:\\2025服务外包竞赛\\voice_t\\backend\\uploads\\voiced_courseware\\course_task_1744521738_88f9_audio\\slide_3_chunk_1.wav",
+          "duration": 14.512471655328799
+        }
+      ],
+      "total_duration": 14.512471655328799
+    }
+  ],
+  "tts_params": {
+    "mode": "sft",
+    "speed": 1.0,
+    "emotion": "neutral",
+    "pitch": 0.0,
+    "energy": 1.0,
+    "pause_factor": 1.0,
+    "seed": 1738
+  }
+}
