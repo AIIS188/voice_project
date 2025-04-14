@@ -41,8 +41,9 @@ npm run dev
 
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # 在Windows上使用: venv\Scripts\activate
+conda create -n cosyvoice -y python=3.10
+conda activate cosyvoice
+pip install -r requirements-tts.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 pip install -r requirements.txt
 python run.py
 ```
@@ -54,9 +55,7 @@ python run.py
 - **远程教育**：制作有声课件，方便学生自主学习
 - **特殊教育**：为视障学生提供有声教材，为听障学生添加字幕
 
-## 演示视频
 
-[点击观看演示视频](https://example.com/demo)
 
 ## 项目文档
 
@@ -73,11 +72,6 @@ python run.py
 
 ## 开发团队
 
-- 张三 - 项目负责人
-- 李四 - 前端开发
-- 王五 - 后端开发
-- 赵六 - AI算法工程师
-
-## 许可证
-
-本项目采用 MIT 许可证。详情见 [LICENSE](LICENSE) 文件。
+- 叶浩阳 - 项目负责人
+- 李志轩、滕家锋、叶浩阳 - 前端后端开发
+-  廖鑫越 - 文档整理
