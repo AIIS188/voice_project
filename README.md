@@ -68,7 +68,7 @@ python run.py
 
 - **前端**：React, Ant Design, Vite
 - **后端**：Python, FastAPI, librosa
-- **AI模型**：FastSpeech2, HiFi-GAN, YourTTS, Whisper
+- **AI模型**：Cosyvoice
 
 ## 开发团队
 
